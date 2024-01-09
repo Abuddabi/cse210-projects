@@ -4,8 +4,9 @@ class Program
 {
     static void Main(string[] args)
     {
-        // Console.WriteLine("Hello Sandbox World!");
-        string test = "testString";
-        Console.WriteLine($"test: {test}");
+        string userText = Console.ReadLine();
+        bool test = int.TryParse(userText, out int guessNumber);
+
+        Console.WriteLine(guessNumber);
     }
 }
