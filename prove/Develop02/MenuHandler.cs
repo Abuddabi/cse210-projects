@@ -63,7 +63,7 @@ class MenuHandler
     return menu;
   }
 
-  static int GetUserAnswer(int menuCount)
+  static int GetUserAnswer(int maximum)
   {
     int userNumber;
     bool inputValid;
@@ -75,7 +75,7 @@ class MenuHandler
 
       if (inputValid)
       {
-        inputValid = userNumber > 0 && userNumber <= menuCount;
+        inputValid = userNumber > 0 && userNumber <= maximum;
       }
 
       if (!inputValid)
@@ -142,14 +142,14 @@ class MenuHandler
     } while (!fileExists);
 
 
-    _fileHandler.LoadFromFile(fileName);
+    FileHandler.LoadFromFile(fileName);
   }
 
   public static void Save()
   {
     string fileName = AskForFile();
 
-    _fileHandler.SaveToFile(fileName);
+    FileHandler.SaveToFile(fileName);
     Journal._hasUnsaved = false;
   }
 
@@ -185,7 +185,7 @@ class MenuHandler
     {
       Console.WriteLine("What is the filename?");
       fileName = Console.ReadLine();
-      isValid = _fileHandler.CheckFile(fileName);
+      isValid = _fileHandler.CheckExtension(fileName);
 
       if (!isValid)
       {
