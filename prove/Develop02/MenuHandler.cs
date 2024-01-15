@@ -15,11 +15,7 @@ class MenuHandler
 
   static readonly PromptGenerator _promptGenerator = new PromptGenerator();
   static readonly Journal _journal = new Journal();
-
-  static readonly string[] _validFileExtensions = {
-    ".txt",
-    ".md"
-  };
+  static readonly FileHandler _fileHandler = new FileHandler();
   static readonly ColorConsole _console = new ColorConsole();
 
   public void RunMenuLoop()
@@ -142,14 +138,14 @@ class MenuHandler
     } while (!fileExists);
 
 
-    _journal.LoadFromFile(fileName);
+    _fileHandler.LoadFromFile(fileName);
   }
 
   public static void Save()
   {
     string fileName = AskForFile();
 
-    _journal.SaveToFile(fileName);
+    _fileHandler.SaveToFile(fileName);
     _journal._hasUnsaved = false;
   }
 
@@ -179,22 +175,13 @@ class MenuHandler
   {
     string fileName;
     bool isValid;
-    string extensions = string.Join("|", _validFileExtensions);
+    string extensions = string.Join("|", _fileHandler._validFileExtensions);
 
     do
     {
       Console.WriteLine("What is the filename?");
       fileName = Console.ReadLine();
-      isValid = false;
-
-      foreach (string ext in _validFileExtensions)
-      {
-        if (fileName.Contains(ext))
-        {
-          isValid = true;
-          break;
-        }
-      }
+      isValid = _fileHandler.CheckFile(fileName);
 
       if (!isValid)
       {
