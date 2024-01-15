@@ -2,11 +2,8 @@ using System;
 
 class Program
 {
-    static void Main(string[] args)
-    {
-        string userText = Console.ReadLine();
-        bool test = int.TryParse(userText, out int guessNumber);
-
-        Console.WriteLine(guessNumber);
-    }
+  static void Main(string[] args)
+  {
+    Console.WriteLine(DateTime.Now.ToString("MM/dd/yyyy"));
+  }
 }

@@ -2,8 +2,17 @@ using System;
 
 class Program
 {
-    static void Main(string[] args)
-    {
-        Console.WriteLine("Hello Develop02 World!");
-    }
+  static MenuHandler _menuHandler = new MenuHandler(); 
+  static void Main(string[] args)
+  {
+    PrintWelcomeMsg();
+    _menuHandler.RunMenuLoop();
+  }
+
+
+
+  static void PrintWelcomeMsg()
+  {
+    Console.WriteLine("Welcome to the Journal Program!");
+  }
 }
