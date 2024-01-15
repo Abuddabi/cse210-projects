@@ -3,17 +3,17 @@ using System.IO;
 
 class Journal
 {
-  public readonly List<Entry> _entries = new List<Entry>();
-  public bool _hasUnsaved = false;
+  static readonly List<Entry> _entries = new List<Entry>();
+  public static bool _hasUnsaved = false;
 
   static readonly ColorConsole _console = new ColorConsole();
 
-  public void AddEntry(Entry newEntry)
+  public static void AddEntry(Entry newEntry)
   {
     _entries.Add(newEntry);
   }
 
-  public void DisplayAll()
+  public static void DisplayAll()
   {
     if (_entries.Count == 0)
     {
@@ -25,5 +25,10 @@ class Journal
     {
       Console.WriteLine($"{entry.MakeString()}\n");
     }
+  }
+
+  public static List<Entry> GetEntries()
+  {
+    return _entries;
   }
 }

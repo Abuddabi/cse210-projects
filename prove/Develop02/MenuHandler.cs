@@ -14,7 +14,6 @@ class MenuHandler
   };
 
   static readonly PromptGenerator _promptGenerator = new PromptGenerator();
-  static readonly Journal _journal = new Journal();
   static readonly FileHandler _fileHandler = new FileHandler();
   static readonly ColorConsole _console = new ColorConsole();
 
@@ -47,16 +46,21 @@ class MenuHandler
 
   static string[] GenerateMenu()
   {
-    string[] menu;
+    string[] menu = _menu;
 
-    // remove Save option from menu if there is nothing to save.
-    if (!_journal._hasUnsaved)
+    // hide Save option from menu if there is nothing to save.
+    if (!Journal._hasUnsaved)
     {
-      menu = _menu.Where(item => item != "Save").ToArray();
-      return menu;
+      menu = menu.Where(item => item != "Save").ToArray();
     }
 
-    return _menu;
+    // hide Display option from menu if there is nothing to display.
+    if (Journal.GetEntries().Count == 0)
+    {
+      menu = menu.Where(item => item != "Display").ToArray();
+    }
+
+    return menu;
   }
 
   static int GetUserAnswer(int menuCount)
@@ -112,13 +116,13 @@ class MenuHandler
       _entryText = userText
     };
 
-    _journal.AddEntry(newEntry);
-    _journal._hasUnsaved = true;
+    Journal.AddEntry(newEntry);
+    Journal._hasUnsaved = true;
   }
 
   public static void Display()
   {
-    _journal.DisplayAll();
+    Journal.DisplayAll();
   }
 
   public static void Load()
@@ -146,12 +150,12 @@ class MenuHandler
     string fileName = AskForFile();
 
     _fileHandler.SaveToFile(fileName);
-    _journal._hasUnsaved = false;
+    Journal._hasUnsaved = false;
   }
 
   public static void Quit()
   {
-    if (_journal._hasUnsaved)
+    if (Journal._hasUnsaved)
     {
       string userText;
 
@@ -164,7 +168,7 @@ class MenuHandler
       if (userText == "yes")
       {
         Save();
-        _journal._hasUnsaved = false;
+        Journal._hasUnsaved = false;
       }
     }
 

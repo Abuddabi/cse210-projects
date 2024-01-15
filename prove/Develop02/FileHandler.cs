@@ -9,17 +9,17 @@ class FileHandler
     ".txt",
     ".md"
   };
-  static Journal _journal = new Journal();
   static readonly ColorConsole _console = new ColorConsole();
 
   public void SaveToFile(string fileName)
   {
     string d;
     string text;
+    List<Entry> entries = Journal.GetEntries();
 
     using (StreamWriter outputFile = new StreamWriter(fileName))
     {
-      foreach (Entry entry in _journal._entries)
+      foreach (Entry entry in entries)
       {
         d = _delimiter;
         text = $"{entry._date}{d}{entry._promptText}{d}{entry._entryText}";
@@ -45,7 +45,7 @@ class FileHandler
         _entryText = parts[2]
       };
 
-      _journal.AddEntry(newEntry);
+      Journal.AddEntry(newEntry);
     }
 
     _console.GreenMsg("Your Journal has been successfully loaded.\n");
