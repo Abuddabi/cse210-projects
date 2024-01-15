@@ -1,37 +1,66 @@
 using System;
+using System.IO;
 
 class Journal
 {
   static readonly List<Entry> _entries = new List<Entry>();
   public bool _hasUnsaved = false;
 
-  public void AddEntry(string prompt, string userText)
-  {
-    Entry newEntry = new Entry()
-    {
-      _date = DateTime.Now.ToString("MM/dd/yyyy"),
-      _promptText = prompt,
-      _entryText = userText
-    };
+  static readonly string _delimiter = "~|~";
 
+  public void AddEntry(Entry newEntry)
+  {
     _entries.Add(newEntry);
   }
 
   public void DisplayAll()
   {
-    foreach (Entry entry in _entries)
+    if (_entries.Count > 0)
     {
-      entry.Display();
+      foreach (Entry entry in _entries)
+      {
+        Console.WriteLine($"{entry.MakeString()}\n");
+      }
+    }
+    else
+    {
+      Console.WriteLine("Your Journal is empty. Try to write something.\n");
     }
   }
 
   public void SaveToFile(string fileName)
   {
+    using (StreamWriter outputFile = new StreamWriter(fileName))
+    {
+      foreach (Entry entry in _entries)
+      {
+        string d = _delimiter;
+        string text = $"{entry._date}{d}{entry._promptText}{d}{entry._entryText}";
+        outputFile.WriteLine(text);
+      }
+    }
 
+    Console.WriteLine($"Your Journal has been successfully saved to {fileName} file.\n");
   }
 
   public void LoadFromFile(string fileName)
   {
+    string[] lines = File.ReadAllLines(fileName);
 
+    foreach (string line in lines)
+    {
+      string[] parts = line.Split(_delimiter);
+
+      Entry newEntry = new Entry()
+      {
+        _date = parts[0],
+        _promptText = parts[1],
+        _entryText = parts[2]
+      };
+
+      AddEntry(newEntry);
+    }
+
+    Console.WriteLine("Your Journal has been successfully loaded.\n");
   }
 }

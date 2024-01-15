@@ -4,8 +4,8 @@ using System.Reflection;
 class MenuHandler
 {
   // We should have methods with the same names as menu items. 
-  // Methods should be public and static.
-  static List<string> _menu = new List<string>()
+  // Those methods should be public and static.
+  static readonly List<string> _menu = new List<string>()
   {
     "Write",
     "Display",
@@ -17,17 +17,23 @@ class MenuHandler
   static readonly PromptGenerator _promptGenerator = new PromptGenerator();
   static readonly Journal _journal = new Journal();
 
+  static readonly string[] _validFileExtensions = {
+    ".txt",
+    ".md"
+  };
+
   public void RunMenuLoop()
   {
     int userSelect;
     string chosenItem;
+    List<string> menu;
 
     do
     {
       PrintMenu();
       userSelect = GetUserAnswer();
       userSelect--; // turn to index
-      List<string> menu = GenerateMenu();
+      menu = GenerateMenu();
       chosenItem = menu[userSelect];
       RunMethodByMenuItem(chosenItem);
     } while (chosenItem != "Quit");
@@ -50,7 +56,7 @@ class MenuHandler
     List<string> menu;
 
     // remove Save option from menu if there is nothing to save.
-    if (_journal._hasUnsaved == false)
+    if (!_journal._hasUnsaved)
     {
       menu = _menu.Where(item => item != "Save").ToList();
     }
@@ -108,23 +114,33 @@ class MenuHandler
     Console.WriteLine($"{prompt}");
     string userText = Console.ReadLine();
 
-    _journal.AddEntry(prompt, userText);
+    Entry newEntry = new Entry()
+    {
+      _date = DateTime.Now.ToShortDateString(),
+      _promptText = prompt,
+      _entryText = userText
+    };
+
+    _journal.AddEntry(newEntry);
     _journal._hasUnsaved = true;
   }
 
   public static void Display()
   {
-    Console.WriteLine("Display method");
+    _journal.DisplayAll();
   }
 
   public static void Load()
   {
-    Console.WriteLine("Load method");
+    string fileName = AskForFile();
+    _journal.LoadFromFile(fileName);
   }
 
   public static void Save()
   {
-    Console.WriteLine("Save method");
+    string fileName = AskForFile();
+
+    _journal.SaveToFile(fileName);
     _journal._hasUnsaved = false;
   }
 
@@ -148,5 +164,34 @@ class MenuHandler
     }
 
     Console.WriteLine("Bye bye!");
+  }
+
+  static string AskForFile()
+  {
+    string fileName;
+    bool isValid;
+
+    do
+    {
+      Console.WriteLine("What is the filename?");
+      fileName = Console.ReadLine();
+      isValid = false;
+
+      foreach (string ext in _validFileExtensions)
+      {
+        if (fileName.Contains(ext))
+        {
+          isValid = true;
+          break;
+        }
+      }
+
+      if (!isValid)
+      {
+        Console.WriteLine($"Available file extensions: [{string.Join("|", _validFileExtensions)}] Try one more time.");
+      }
+    } while (isValid != true);
+
+    return fileName;
   }
 }

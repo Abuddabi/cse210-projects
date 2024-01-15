@@ -6,8 +6,9 @@ class Entry
   public string _promptText;
   public string _entryText;
 
-  public void Display()
+  public string MakeString()
   {
-    Console.WriteLine($"Date: {_date} - Prompt: {_promptText}\n{_entryText}");
+    string entryString = $"Date: {_date} - Prompt: {_promptText}\n{_entryText}";
+    return entryString;
   }
 }
