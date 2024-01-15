@@ -21,6 +21,7 @@ class MenuHandler
     ".txt",
     ".md"
   };
+  static readonly ColorConsole _console = new ColorConsole();
 
   public void RunMenuLoop()
   {
@@ -30,19 +31,17 @@ class MenuHandler
 
     do
     {
-      PrintMenu();
-      userSelect = GetUserAnswer();
-      userSelect--; // turn to index
       menu = GenerateMenu();
+      PrintMenu(menu);
+      userSelect = GetUserAnswer(menu.Count);
+      userSelect--; // turn to index
       chosenItem = menu[userSelect];
       RunMethodByMenuItem(chosenItem);
     } while (chosenItem != "Quit");
   }
 
-  static void PrintMenu()
+  static void PrintMenu(List<string> menu)
   {
-    List<string> menu = GenerateMenu();
-
     Console.WriteLine("Please select one of the following choices:");
 
     for (int i = 0; i < menu.Count; i++)
@@ -59,16 +58,13 @@ class MenuHandler
     if (!_journal._hasUnsaved)
     {
       menu = _menu.Where(item => item != "Save").ToList();
-    }
-    else
-    {
-      menu = _menu;
+      return menu;
     }
 
-    return menu;
+    return _menu;
   }
 
-  static int GetUserAnswer()
+  static int GetUserAnswer(int menuCount)
   {
     int userNumber;
     bool inputValid;
@@ -80,12 +76,12 @@ class MenuHandler
 
       if (inputValid)
       {
-        inputValid = userNumber > 0 && userNumber <= _menu.Count;
+        inputValid = userNumber > 0 && userNumber <= menuCount;
       }
 
       if (!inputValid)
       {
-        Console.WriteLine("Your input is incorrect. Try one more time.");
+        _console.RedMsg("Your input is incorrect. Try one more time.");
       }
     } while (!inputValid);
 
@@ -103,7 +99,7 @@ class MenuHandler
     }
     else
     {
-      Console.WriteLine($"Method {menuItem} not found.");
+      _console.RedMsg($"Method {menuItem} not found.");
     }
   }
 
@@ -132,7 +128,21 @@ class MenuHandler
 
   public static void Load()
   {
-    string fileName = AskForFile();
+    bool fileExists;
+    string fileName;
+
+    do
+    {
+      fileName = AskForFile();
+      fileExists = File.Exists(fileName);
+
+      if (!fileExists)
+      {
+        _console.RedMsg($"{fileName} file doesn't exist. Try another one.");
+      }
+    } while (!fileExists);
+
+
     _journal.LoadFromFile(fileName);
   }
 
@@ -170,6 +180,7 @@ class MenuHandler
   {
     string fileName;
     bool isValid;
+    string extensions = string.Join("|", _validFileExtensions);
 
     do
     {
@@ -188,7 +199,7 @@ class MenuHandler
 
       if (!isValid)
       {
-        Console.WriteLine($"Available file extensions: [{string.Join("|", _validFileExtensions)}] Try one more time.");
+        _console.RedMsg($"Available file extensions: [{extensions}] Try one more time.");
       }
     } while (isValid != true);
 

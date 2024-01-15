@@ -8,6 +8,8 @@ class Journal
 
   static readonly string _delimiter = "~|~";
 
+  static readonly ColorConsole _console = new ColorConsole();
+
   public void AddEntry(Entry newEntry)
   {
     _entries.Add(newEntry);
@@ -15,16 +17,15 @@ class Journal
 
   public void DisplayAll()
   {
-    if (_entries.Count > 0)
+    if (_entries.Count == 0)
     {
-      foreach (Entry entry in _entries)
-      {
-        Console.WriteLine($"{entry.MakeString()}\n");
-      }
+      _console.RedMsg("Your Journal is empty. Try to write something.\n");
+      return;
     }
-    else
+
+    foreach (Entry entry in _entries)
     {
-      Console.WriteLine("Your Journal is empty. Try to write something.\n");
+      Console.WriteLine($"{entry.MakeString()}\n");
     }
   }
 
@@ -40,7 +41,7 @@ class Journal
       }
     }
 
-    Console.WriteLine($"Your Journal has been successfully saved to {fileName} file.\n");
+    _console.GreenMsg($"Your Journal has been successfully saved to {fileName} file.\n");
   }
 
   public void LoadFromFile(string fileName)
@@ -61,6 +62,6 @@ class Journal
       AddEntry(newEntry);
     }
 
-    Console.WriteLine("Your Journal has been successfully loaded.\n");
+    _console.GreenMsg("Your Journal has been successfully loaded.\n");
   }
 }
