@@ -5,8 +5,7 @@ class MenuHandler
 {
   // We should have methods with the same names as menu items. 
   // Those methods should be public and static.
-  static readonly List<string> _menu = new List<string>()
-  {
+  static readonly string[] _menu = {
     "Write",
     "Display",
     "Load",
@@ -27,37 +26,37 @@ class MenuHandler
   {
     int userSelect;
     string chosenItem;
-    List<string> menu;
+    string[] menu;
 
     do
     {
       menu = GenerateMenu();
       PrintMenu(menu);
-      userSelect = GetUserAnswer(menu.Count);
+      userSelect = GetUserAnswer(menu.Length);
       userSelect--; // turn to index
       chosenItem = menu[userSelect];
       RunMethodByMenuItem(chosenItem);
     } while (chosenItem != "Quit");
   }
 
-  static void PrintMenu(List<string> menu)
+  static void PrintMenu(string[] menu)
   {
     Console.WriteLine("Please select one of the following choices:");
 
-    for (int i = 0; i < menu.Count; i++)
+    for (int i = 0; i < menu.Length; i++)
     {
       Console.WriteLine($"{i + 1}. {menu[i]}");
     }
   }
 
-  static List<string> GenerateMenu()
+  static string[] GenerateMenu()
   {
-    List<string> menu;
+    string[] menu;
 
     // remove Save option from menu if there is nothing to save.
     if (!_journal._hasUnsaved)
     {
-      menu = _menu.Where(item => item != "Save").ToList();
+      menu = _menu.Where(item => item != "Save").ToArray();
       return menu;
     }
 

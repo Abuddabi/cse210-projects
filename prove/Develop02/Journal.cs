@@ -19,7 +19,7 @@ class Journal
   {
     if (_entries.Count == 0)
     {
-      _console.RedMsg("Your Journal is empty. Try to write something.\n");
+      _console.RedMsg("Your Journal is empty. Try to write something or load from the file.\n");
       return;
     }
 
@@ -31,12 +31,15 @@ class Journal
 
   public void SaveToFile(string fileName)
   {
+    string d;
+    string text;
+  
     using (StreamWriter outputFile = new StreamWriter(fileName))
     {
       foreach (Entry entry in _entries)
       {
-        string d = _delimiter;
-        string text = $"{entry._date}{d}{entry._promptText}{d}{entry._entryText}";
+        d = _delimiter;
+        text = $"{entry._date}{d}{entry._promptText}{d}{entry._entryText}";
         outputFile.WriteLine(text);
       }
     }
