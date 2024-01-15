@@ -130,6 +130,23 @@ class MenuHandler
 
   public static void Quit()
   {
+    if (_journal._hasUnsaved)
+    {
+      string userText;
+
+      do
+      {
+        Console.Write("You have unsaved records. Do you want to save them before quitting? [yes/no]: ");
+        userText = Console.ReadLine();
+      } while (userText != "yes" && userText != "no");
+
+      if (userText == "yes")
+      {
+        Save();
+        _journal._hasUnsaved = false;
+      }
+    }
+
     Console.WriteLine("Bye bye!");
   }
 }
