@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-class MenuHandler
+class Menu
 {
   // We should have methods with the same names as menu items. 
   // Those methods should be public and static.
@@ -17,34 +17,7 @@ class MenuHandler
   static readonly FileHandler _fileHandler = new FileHandler();
   static readonly ColorConsole _console = new ColorConsole();
 
-  public void RunMenuLoop()
-  {
-    int userSelect;
-    string chosenItem;
-    string[] menu;
-
-    do
-    {
-      menu = GenerateMenu();
-      PrintMenu(menu);
-      userSelect = GetUserAnswer(menu.Length);
-      userSelect--; // turn to index
-      chosenItem = menu[userSelect];
-      RunMethodByMenuItem(chosenItem);
-    } while (chosenItem != "Quit");
-  }
-
-  static void PrintMenu(string[] menu)
-  {
-    Console.WriteLine("Please select one of the following choices:");
-
-    for (int i = 0; i < menu.Length; i++)
-    {
-      Console.WriteLine($"{i + 1}. {menu[i]}");
-    }
-  }
-
-  static string[] GenerateMenu()
+  public static string[] Generate()
   {
     string[] menu = _menu;
 
@@ -63,33 +36,19 @@ class MenuHandler
     return menu;
   }
 
-  static int GetUserAnswer(int maximum)
+  public static void Print(string[] menu)
   {
-    int userNumber;
-    bool inputValid;
+    Console.WriteLine("Please select one of the following choices:");
 
-    do
+    for (int i = 0; i < menu.Length; i++)
     {
-      Console.Write("What would you like to do? ");
-      inputValid = int.TryParse(Console.ReadLine(), out userNumber);
-
-      if (inputValid)
-      {
-        inputValid = userNumber > 0 && userNumber <= maximum;
-      }
-
-      if (!inputValid)
-      {
-        _console.RedMsg("Your input is incorrect. Try one more time.");
-      }
-    } while (!inputValid);
-
-    return userNumber;
+      Console.WriteLine($"{i + 1}. {menu[i]}");
+    }
   }
 
-  static void RunMethodByMenuItem(string menuItem)
+  public static void RunMethodByMenuItem(string menuItem)
   {
-    MethodInfo method = typeof(MenuHandler).GetMethod(menuItem);
+    MethodInfo method = typeof(Menu).GetMethod(menuItem);
     bool hasMethod = method != null;
 
     if (hasMethod)
@@ -103,6 +62,7 @@ class MenuHandler
   }
 
 
+  // MENU METHODS START
   public static void Write()
   {
     string prompt = _promptGenerator.GetRandomPrompt();
@@ -142,7 +102,22 @@ class MenuHandler
     } while (!fileExists);
 
 
-    FileHandler.LoadFromFile(fileName);
+    List<string[]> entries = FileHandler.LoadFromFile(fileName);
+    Journal.Clear();
+
+    foreach (string[] entry in entries)
+    {
+      Entry newEntry = new Entry()
+      {
+        _date = entry[0],
+        _promptText = entry[1],
+        _entryText = entry[2]
+      };
+
+      Journal.AddEntry(newEntry);
+    }
+
+    _console.GreenMsg("Your Journal has been successfully loaded.\n");
   }
 
   public static void Save()
@@ -168,12 +143,12 @@ class MenuHandler
       if (userText == "yes")
       {
         Save();
-        Journal._hasUnsaved = false;
       }
     }
 
     Console.WriteLine("Bye bye!");
   }
+  // MENU METHODS END
 
   static string AskForFile()
   {

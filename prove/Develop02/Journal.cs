@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 
 class Journal
 {
@@ -23,12 +22,18 @@ class Journal
 
     foreach (Entry entry in _entries)
     {
-      Console.WriteLine($"{entry.MakeString()}\n");
+      entry.Display();
     }
   }
 
   public static List<Entry> GetEntries()
   {
     return _entries;
+  }
+
+  public static void Clear()
+  {
+    _entries.Clear();
+    _hasUnsaved = false;
   }
 }

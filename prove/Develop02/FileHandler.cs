@@ -56,31 +56,30 @@ class FileHandler
     }
   }
 
-  public static void LoadFromFile(string fileName)
+  public static List<string[]> LoadFromFile(string fileName, bool skipFirst = true)
   {
+    List<string[]> output = new List<string[]>();
+
     using (TextFieldParser parser = new TextFieldParser(fileName))
     {
       parser.SetDelimiters(_delimiter);
 
       // Skip the first line with headings
-      parser.ReadLine();
+      if (skipFirst)
+      {
+        parser.ReadLine();
+      }
+
+      string[] fields;
 
       while (!parser.EndOfData)
       {
-        string[] fields = parser.ReadFields();
-
-        Entry newEntry = new Entry()
-        {
-          _date = fields[0],
-          _promptText = fields[1],
-          _entryText = fields[2]
-        };
-
-        Journal.AddEntry(newEntry);
+        fields = parser.ReadFields();
+        output.Add(fields);
       }
     }
 
-    _console.GreenMsg("Your Journal has been successfully loaded.\n");
+    return output;
   }
 
   public bool CheckExtension(string fileName)

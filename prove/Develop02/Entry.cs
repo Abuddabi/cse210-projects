@@ -6,9 +6,14 @@ class Entry
   public string _promptText;
   public string _entryText;
 
-  public string MakeString()
+  string EntryToString()
   {
-    string entryString = $"Date: {_date} - Prompt: {_promptText}\n{_entryText}";
-    return entryString;
+    return $"Date: {_date} - Prompt: {_promptText}\n{_entryText}";
+  }
+
+  public void Display()
+  {
+    string text = EntryToString();
+    Console.WriteLine($"{text}\n");
   }
 }
