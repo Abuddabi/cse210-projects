@@ -3,8 +3,10 @@ using System.Reflection;
 
 class Menu
 {
-  // We should have methods with the same names as menu items. 
-  // Those methods should be public and static.
+  /* 
+    We should have methods with the same names as menu items. 
+    Those methods should be public and static. 
+   */
   static readonly string[] _menu = {
     "Write",
     "Display",
@@ -14,7 +16,9 @@ class Menu
   };
 
   static readonly PromptGenerator _promptGenerator = new PromptGenerator();
+
   static readonly FileHandler _fileHandler = new FileHandler();
+
   static readonly ColorConsole _console = new ColorConsole();
 
   public static string[] Generate()
@@ -60,7 +64,6 @@ class Menu
       _console.RedMsg($"Method {menuItem} not found.");
     }
   }
-
 
   // MENU METHODS START
   public static void Write()

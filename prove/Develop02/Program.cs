@@ -1,3 +1,10 @@
+/* 
+  I improved the process of saving and loading to save as a .csv file.
+  Also I added validation for several methods.
+  Added colorful console messages.
+  Also the menu options are displayed by conditions.
+ */
+
 using System;
 
 class Program
