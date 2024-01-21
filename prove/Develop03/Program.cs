@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 
 class Program
 {
@@ -67,15 +69,20 @@ class Program
 
   private static async Task<Tuple<Reference, string>> GetVerseOnline()
   {
-    Console.WriteLine("Please paste your API key or type 'cancel':");
-    string userInput = Console.ReadLine();
+    string apiKey = GetConfigValue("API_KEYS:ESV");
 
-    if (userInput == "cancel")
+    if (apiKey == null)
     {
-      return GetDefaultVerse();
-    }
+      Console.WriteLine("Please paste your API key or type 'cancel':");
+      string userInput = Console.ReadLine();
 
-    string apiKey = userInput;
+      if (userInput == "cancel")
+      {
+        return GetDefaultVerse();
+      }
+
+      apiKey = userInput;
+    }
 
     string reference;
     bool isValid;
@@ -178,5 +185,22 @@ class Program
     } while (!inputValid);
 
     return canContinue;
+  }
+
+  private static string GetConfigValue(string valueName)
+  {
+    try
+    {
+      IConfiguration config = new ConfigurationBuilder()
+      .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+      .AddJsonFile("appsettings.json")
+      .Build();
+
+      return config[valueName];
+    }
+    catch (System.IO.FileNotFoundException)
+    {
+      return null;
+    }
   }
 }
