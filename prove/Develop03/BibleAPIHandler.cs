@@ -4,7 +4,8 @@ using System.Text.Json;
 
 class BibleAPIHandler
 {
-  private string _apiKey;
+  private readonly string _apiKey;
+  private bool _success;
 
   public BibleAPIHandler(string apiKey)
   {
@@ -23,7 +24,8 @@ class BibleAPIHandler
     "&indent-poetry-lines=1" +
     "&include-footnotes=false";
 
-    string result = "Fail";
+    _success = false;
+    string result = "";
 
     using (HttpClient client = new HttpClient())
     {
@@ -51,24 +53,26 @@ class BibleAPIHandler
               {
                 string passages = firstElement.GetString();
                 passages = passages.Replace("\n", "").Replace(",", ", ").Replace(":", ": ").Replace("  ", " ").Trim();
+
+                _success = true;
                 result = passages;
               }
             }
             else
             {
-              // Handle the case when the array is empty (result == "Fault" by default)
-              Console.WriteLine($"The error in your reference: {reference}. There is no such scripture.");
+              // Handle the case when the array is empty (status == "Fail" by default)
+              result = $"The error in your reference: {reference}. There is no such scripture.";
             }
           }
         }
         else
         {
-          Console.WriteLine($"Failed to get API data. Status code: {response.StatusCode}");
+          result = $"Failed to get API data. Status code: {response.StatusCode}.";
         }
       }
       catch (Exception ex)
       {
-        Console.WriteLine($"An error occurred during the API request: {ex.Message}");
+        result = $"An error occurred during the API request: {ex.Message}";
       }
     }
 
@@ -80,6 +84,11 @@ class BibleAPIHandler
     string jsonContent = await response.Content.ReadAsStringAsync();
     JsonDocument jsonDocument = JsonDocument.Parse(jsonContent);
     return jsonDocument.RootElement.GetProperty(propertyName);
+  }
+
+  public bool IsSuccess()
+  {
+    return _success;
   }
 }
 

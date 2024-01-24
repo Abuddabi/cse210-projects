@@ -1,14 +1,15 @@
+/* 
+  I added API request to https://api.esv.org
+  so the user can choose any verse from the Bible.
+ */
+
 using System;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
 
 class Program
 {
-  private static Tuple<Reference, string> _theVerse;
-  private static string _mode = "offline";
-
-  private static string _incorrectInputMsg = "Your input is incorrect. Try one more time.";
+  private static bool _onlineMode = false;
+  private static readonly string _incorrectInputMsg = "Your input is incorrect. Try one more time.";
 
   static async Task Main(string[] args)
   {
@@ -19,13 +20,13 @@ class Program
 
     do
     {
-      Console.Write("\nDo you want to use The English Standard Version (ESV) Bible online? [yes/no]: ");
+      Console.Write("Do you want to use The English Standard Version (ESV) Bible online? [yes/no]: ");
       userInput = Console.ReadLine();
       inputValid = true;
 
       if (userInput == "yes")
       {
-        _mode = "online";
+        _onlineMode = true;
       }
       else if (userInput == "no")
       {
@@ -38,16 +39,21 @@ class Program
       }
     } while (!inputValid);
 
-    if (_mode == "online")
+    string[] theVerse;
+    if (_onlineMode)
     {
-      _theVerse = await GetVerseOnline();
+      theVerse = await GetVerseOnline();
     }
     else
     {
-      _theVerse = GetDefaultVerse();
+      theVerse = GetDefaultVerse();
     }
 
-    Scripture scripture = new Scripture(_theVerse.Item1, _theVerse.Item2);
+    string reference = theVerse[0];
+    string verseText = theVerse[1];
+    Reference referenceObj = GetReferenceFromString(reference);
+
+    Scripture scripture = new Scripture(referenceObj, verseText);
     Console.Clear();
 
     bool canContinue;
@@ -67,7 +73,7 @@ class Program
     } while (canContinue);
   }
 
-  private static async Task<Tuple<Reference, string>> GetVerseOnline()
+  private static async Task<string[]> GetVerseOnline()
   {
     string apiKey = GetConfigValue("API_KEYS:ESV");
 
@@ -100,19 +106,19 @@ class Program
 
     BibleAPIHandler apiHandler = new BibleAPIHandler(apiKey);
 
-    Console.WriteLine("Loading... Please wait.");
+    Console.WriteLine("\nLoading... Please wait.");
     string result = await apiHandler.GetVerseByReference(reference);
 
-    if (result == "Fail")
+    if (!apiHandler.IsSuccess())
     {
-      Console.WriteLine("We will continue with default verse. Press any key to continue.");
+      Console.WriteLine($"{result}\nWe will continue with default verse. Press any key to continue.");
       Console.ReadKey();
       return GetDefaultVerse();
     }
     else
     {
-      Reference referenceObj = GetReferenceFromString(reference);
-      return Tuple.Create(referenceObj, result);
+      string[] verseWithReference = { reference, result };
+      return verseWithReference;
     }
   }
 
@@ -145,14 +151,15 @@ class Program
     return reference;
   }
 
-  private static Tuple<Reference, string> GetDefaultVerse()
+  private static string[] GetDefaultVerse()
   {
-    Reference reference = new Reference("Proverbs", 3, 5, 6);
+    string reference = "Proverbs 3:5-6";
     string text = "" +
     "Trust in the Lord with all thine heart; and lean not unto thine own understanding." +
     "In all thy ways acknowledge him, and he shall direct thy paths.";
 
-    return Tuple.Create(reference, text);
+    string[] verseWithReference = { reference, text };
+    return verseWithReference;
   }
 
   private static bool GetUserAnswer()
@@ -189,17 +196,20 @@ class Program
 
   private static string GetConfigValue(string valueName)
   {
+    string configFilename = "appsettings.json";
+
     try
     {
       IConfiguration config = new ConfigurationBuilder()
       .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-      .AddJsonFile("appsettings.json")
+      .AddJsonFile(configFilename)
       .Build();
 
       return config[valueName];
     }
     catch (System.IO.FileNotFoundException)
     {
+      Console.WriteLine($"Config file {configFilename} is not found.");
       return null;
     }
   }
