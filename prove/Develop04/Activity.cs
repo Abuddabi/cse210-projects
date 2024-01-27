@@ -20,7 +20,9 @@ class Activity
 
   public string GetStartingMessage()
   {
-    return $"Welcome to the {_name} Activity.\n\n";
+    return "" +
+    $"Welcome to the {_name} Activity.\n\n" +
+    _description;
   }
 
   public void DisplayEndingMessage()
