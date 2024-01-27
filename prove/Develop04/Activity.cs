@@ -6,16 +6,21 @@ class Activity
   private string _description;
   private int _duration;
 
-  public Activity(string name, string description, int duration)
+  public Activity(string name, string description, int duration = 0)
   {
     _name = name;
     _description = description;
     _duration = duration;
   }
 
-  public void DisplayStartingMessage()
+  public void SetDuration(int duration)
   {
+    _duration = duration;
+  }
 
+  public string GetStartingMessage()
+  {
+    return $"Welcome to the {_name} Activity.\n\n";
   }
 
   public void DisplayEndingMessage()
