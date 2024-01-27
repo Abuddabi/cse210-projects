@@ -3,7 +3,7 @@ using System;
 class ReflectingActivity : Activity
 {
   private static readonly string _name = "Reflecting";
-  private static readonly string _description = "Some description";
+  private static readonly string _description = "This activity will help you reflect on times in your life when you have shown strength and resilience. This will help you recognize the power you have and how you can use it in other aspects of your life.";
   private List<string> _prompts;
   private List<string> _questions;
 
