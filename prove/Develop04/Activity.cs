@@ -30,11 +30,6 @@ class Activity
 
   }
 
-  public void ShowSpinner(int seconds)
-  {
-
-  }
-
   public void ShowCountDown(int seconds)
   {
 

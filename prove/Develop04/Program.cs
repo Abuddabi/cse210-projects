@@ -69,5 +69,41 @@ class Program
     Console.WriteLine(activity.GetStartingMessage() + "\n");
     int seconds = GetIntFromUser("How long in seconds, would you like your session? ", 3600); // 1 hour max
     activity.SetDuration(seconds);
+
+    Console.WriteLine("Get ready...");
+    ShowSpinner(5);
+  }
+
+  private static void ShowSpinner(int seconds)
+  {
+    char[] spinner = new char[]
+    {
+      '|',
+      '/',
+      '-',
+      '\\',
+      '|',
+      '/',
+      '-',
+      '\\'
+    };
+
+    double remainSeconds = (double)seconds;
+
+    while (remainSeconds > 0)
+    {
+      foreach (char s in spinner)
+      {
+        Console.Write(s);
+        Thread.Sleep(500);
+        Console.Write("\b \b");
+
+        remainSeconds -= 0.5;
+        if (remainSeconds == 0)
+        {
+          break;
+        }
+      }
+    }
   }
 }
