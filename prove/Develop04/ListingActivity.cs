@@ -2,10 +2,12 @@ using System;
 
 class ListingActivity : Activity
 {
+  private static readonly string _name = "Listing";
+  private static readonly string _description = "Some description";
   private int _count;
   private List<string> _prompts;
 
-  public ListingActivity(string name, string description, int duration) : base(name, description, duration)
+  public ListingActivity(int duration) : base(_name, _description, duration)
   {
     _prompts = new List<string>();
   }

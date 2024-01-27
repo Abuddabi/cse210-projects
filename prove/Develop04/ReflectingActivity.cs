@@ -2,10 +2,12 @@ using System;
 
 class ReflectingActivity : Activity
 {
+  private static readonly string _name = "Reflecting";
+  private static readonly string _description = "Some description";
   private List<string> _prompts;
   private List<string> _questions;
 
-  public ReflectingActivity(string name, string description, int duration) : base(name, description, duration)
+  public ReflectingActivity(int duration) : base(_name, _description, duration)
   {
     _prompts = new List<string>();
     _questions = new List<string>();

@@ -32,4 +32,9 @@ class Activity
   {
 
   }
+
+  public string GetName()
+  {
+    return _name;
+  }
 }
