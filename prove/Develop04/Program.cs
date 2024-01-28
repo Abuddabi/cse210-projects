@@ -12,19 +12,22 @@ class Program
       new ReflectingActivity(),
       new ListingActivity()
     };
-
-    PrintMenu(activities);
-
     int quitIndex = activities.Count + 1;
-    int chosenItem = GetIntFromUser("Select a choice from the menu: ", quitIndex);
+    int chosenItem;
 
-    if (chosenItem < quitIndex)
+    do
     {
-      // turn to index
-      chosenItem--;
-      Activity activity = activities[chosenItem];
-      RunActivity(activity);
-    }
+      PrintMenu(activities);
+      chosenItem = GetIntFromUser("Select a choice from the menu: ", quitIndex);
+
+      if (chosenItem < quitIndex)
+      {
+        // turn to index
+        chosenItem--;
+        Activity activity = activities[chosenItem];
+        RunActivity(activity);
+      }
+    } while (chosenItem != quitIndex);
   }
 
   private static void PrintMenu(List<Activity> activities)
@@ -65,45 +68,14 @@ class Program
 
   private static void RunActivity(Activity activity)
   {
-    Console.Clear();
-    Console.WriteLine(activity.GetStartingMessage() + "\n");
+    activity.DisplayStartingMessage();
     int seconds = GetIntFromUser("How long in seconds, would you like your session? ", 3600); // 1 hour max
     activity.SetDuration(seconds);
 
+    Console.Clear();
     Console.WriteLine("Get ready...");
-    ShowSpinner(5);
-  }
-
-  private static void ShowSpinner(int seconds)
-  {
-    char[] spinner = new char[]
-    {
-      '|',
-      '/',
-      '-',
-      '\\',
-      '|',
-      '/',
-      '-',
-      '\\'
-    };
-
-    double remainSeconds = (double)seconds;
-
-    while (remainSeconds > 0)
-    {
-      foreach (char s in spinner)
-      {
-        Console.Write(s);
-        Thread.Sleep(500);
-        Console.Write("\b \b");
-
-        remainSeconds -= 0.5;
-        if (remainSeconds == 0)
-        {
-          break;
-        }
-      }
-    }
+    activity.ShowSpinner();
+    activity.Run();
+    activity.DisplayEndingMessage();
   }
 }
