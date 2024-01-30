@@ -5,25 +5,54 @@ class ListingActivity : Activity
   private static readonly string _name = "Listing";
   private static readonly string _description = "This activity will help you reflect on the good things in your life by having you list as many things as you can in a certain area.";
   private int _count;
-  private List<string> _prompts;
+  private readonly List<string> _prompts;
 
   public ListingActivity(int duration = 0) : base(_name, _description, duration)
   {
-    _prompts = new List<string>();
+    _prompts = new List<string>()
+    {
+      "Who are people that you appreciate?",
+      "What are personal strengths of yours?",
+      "Who are people that you have helped this week?",
+      "When have you felt the Holy Ghost this month?",
+      "Who are some of your personal heroes?"
+    };
   }
 
-  public void Run()
+  public override void RunActivityLogic()
   {
+    int remainSeconds = base.GetDuration();
+    Console.WriteLine("\nList as many responses you can to the following prompt:");
+    DisplayPrompt();
+    Console.Write("You may begin in: ");
+    base.ShowCountDown(5);
+    remainSeconds -= 5;
 
+    Console.WriteLine();
+    List<string> userList = GetListFromUser(remainSeconds);
+    _count = userList.Count;
+    Console.Write($"You listed {_count} items!");
   }
 
-  public void GetRandomPrompt()
+  private void DisplayPrompt()
   {
-
+    string prompt = base.GetRandomPrompt(_prompts);
+    Console.WriteLine($" --- {prompt} --- ");
   }
 
-  public List<string> GetListFromUser()
+  public List<string> GetListFromUser(int remainSeconds)
   {
-    return _prompts;
+    string userAnswer;
+    List<string> list = new List<string>();
+    DateTime endTime = DateTime.Now.AddSeconds(remainSeconds);
+
+    while (DateTime.Now < endTime)
+    {
+      Console.Write("> ");
+      userAnswer = Console.ReadLine();
+      list.Add(userAnswer);
+    }
+
+    return list;
   }
 }

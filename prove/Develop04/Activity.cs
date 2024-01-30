@@ -6,6 +6,7 @@ class Activity
   private readonly string _description;
   private int _duration;
   private readonly ConsoleHelper _console;
+  private readonly Random _rnd;
 
   public Activity(string name, string description, int duration = 0)
   {
@@ -14,6 +15,7 @@ class Activity
     _duration = duration;
 
     _console = new ConsoleHelper();
+    _rnd = new Random();
   }
 
   public void Run()
@@ -38,21 +40,21 @@ class Activity
     */
   }
 
-  public void DisplayStartingMessage()
+  private void DisplayStartingMessage()
   {
     Console.Clear();
     Console.WriteLine($"Welcome to the {_name} Activity.\n\n{_description}\n");
   }
 
-  public void DisplayEndingMessage()
+  private void DisplayEndingMessage()
   {
-    Console.WriteLine("\n\nWell done!!");
+    Console.WriteLine("\nWell done!!");
     ShowSpinner();
     Console.WriteLine($"\nYou have completed another {_duration} seconds of the {_name} Activity.");
     ShowSpinner();
   }
 
-  public void ShowSpinner(int seconds = 5)
+  protected void ShowSpinner(int seconds = 5)
   {
     char[] spinner = new char[]
     {
@@ -103,5 +105,12 @@ class Activity
   protected int GetDuration()
   {
     return _duration;
+  }
+
+  protected string GetRandomPrompt(List<string> prompts)
+  {
+    int r = _rnd.Next(prompts.Count);
+
+    return prompts[r];
   }
 }

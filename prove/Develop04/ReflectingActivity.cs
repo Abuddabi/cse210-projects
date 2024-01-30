@@ -49,19 +49,13 @@ class ReflectingActivity : Activity
 
     Console.Clear();
     DisplayQuestions(remainSeconds);
+    Console.WriteLine();
   }
 
   private void DisplayPrompt()
   {
-    string prompt = GetRandomPrompt();
+    string prompt = base.GetRandomPrompt(_prompts);
     Console.WriteLine($"\n --- {prompt} --- \n");
-  }
-
-  private string GetRandomPrompt()
-  {
-    int r = _rnd.Next(_prompts.Count);
-
-    return _prompts[r];
   }
 
   public void DisplayQuestions(int remainSec, int pauseSec = 10)

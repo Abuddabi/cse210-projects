@@ -41,5 +41,7 @@ class BreathingActivity : Activity
 
       isBreatheIn = !isBreatheIn;
     }
+
+    Console.WriteLine();
   }
 }
