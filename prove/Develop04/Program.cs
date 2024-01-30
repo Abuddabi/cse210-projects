@@ -2,7 +2,7 @@ using System;
 
 class Program
 {
-  private static ColorConsole _console = new ColorConsole();
+  private static readonly ConsoleHelper _console = new ConsoleHelper();
 
   static void Main(string[] args)
   {
@@ -12,22 +12,22 @@ class Program
       new ReflectingActivity(),
       new ListingActivity()
     };
-    int quitIndex = activities.Count + 1;
+    int quitOption = activities.Count + 1;
     int chosenItem;
 
     do
     {
       PrintMenu(activities);
-      chosenItem = GetIntFromUser("Select a choice from the menu: ", quitIndex);
+      chosenItem = _console.GetIntFromUser("Select a choice from the menu: ", quitOption);
 
-      if (chosenItem < quitIndex)
+      if (chosenItem < quitOption)
       {
         // turn to index
         chosenItem--;
         Activity activity = activities[chosenItem];
-        RunActivity(activity);
+        activity.Run();
       }
-    } while (chosenItem != quitIndex);
+    } while (chosenItem != quitOption);
   }
 
   private static void PrintMenu(List<Activity> activities)
@@ -40,42 +40,5 @@ class Program
       Console.WriteLine($"  {i}. Start {activityName.ToLower()} activity");
     }
     Console.WriteLine($"  {activities.Count + 1}. Quit");
-  }
-
-  private static int GetIntFromUser(string askMsg, int maxValue, int minValue = 1)
-  {
-    int userNumber;
-    bool inputValid;
-
-    do
-    {
-      Console.Write(askMsg);
-      inputValid = int.TryParse(Console.ReadLine(), out userNumber);
-
-      if (inputValid)
-      {
-        inputValid = userNumber >= minValue && userNumber <= maxValue;
-      }
-
-      if (!inputValid)
-      {
-        _console.RedMsg("Your input is incorrect. Try one more time.");
-      }
-    } while (!inputValid);
-
-    return userNumber;
-  }
-
-  private static void RunActivity(Activity activity)
-  {
-    activity.DisplayStartingMessage();
-    int seconds = GetIntFromUser("How long in seconds, would you like your session? ", 3600); // 1 hour max
-    activity.SetDuration(seconds);
-
-    Console.Clear();
-    Console.WriteLine("Get ready...");
-    activity.ShowSpinner();
-    activity.Run();
-    activity.DisplayEndingMessage();
   }
 }

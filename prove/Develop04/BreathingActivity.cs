@@ -4,41 +4,42 @@ class BreathingActivity : Activity
 {
   private static readonly string _name = "Breathing";
   private static readonly string _description = "This activity will help you relax by walking you through breathing in and out slowly. Clear your mind and focus on your breathing.";
-  private bool _in = true;
 
   public BreathingActivity(int duration = 0) : base(_name, _description, duration)
   {
 
   }
 
-  public override void Run()
+  public override void RunActivityLogic()
   {
     string inText = "\n\nBreathe in...";
     string outText = "\nNow breathe out...";
-    int remainSeconds = GetDuration();
+    int count;
+    bool isBreatheIn = true;
+    int remainSeconds = base.GetDuration();
 
     Console.Write(inText);
-    ShowCountDown(2); // parent method
+    base.ShowCountDown(2);
     Console.Write(outText);
-    ShowCountDown(3);
+    base.ShowCountDown(3);
     remainSeconds -= 5;
 
     while (remainSeconds > 0)
     {
-      if (_in)
+      if (isBreatheIn)
       {
         Console.Write(inText);
-        ShowCountDown(4);
-        remainSeconds -= 4;
+        count = 4;
       }
       else
       {
         Console.Write(outText);
-        ShowCountDown(6);
-        remainSeconds -= 6;
+        count = 6;
       }
+      base.ShowCountDown(count);
+      remainSeconds -= count;
 
-      _in = !_in;
+      isBreatheIn = !isBreatheIn;
     }
   }
 }

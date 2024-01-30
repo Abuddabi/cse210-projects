@@ -2,33 +2,46 @@ using System;
 
 class Activity
 {
-  private string _name;
-  private string _description;
+  private readonly string _name;
+  private readonly string _description;
   private int _duration;
+  private readonly ConsoleHelper _console;
 
   public Activity(string name, string description, int duration = 0)
   {
     _name = name;
     _description = description;
     _duration = duration;
+
+    _console = new ConsoleHelper();
   }
 
-  public virtual void Run()
+  public void Run()
+  {
+    DisplayStartingMessage();
+    int seconds = _console.GetIntFromUser("How long in seconds, would you like your session? ", 3600); // 1 hour max
+    _duration = seconds;
+
+    Console.Clear();
+    Console.WriteLine("Get ready...");
+    ShowSpinner();
+
+    RunActivityLogic();
+
+    DisplayEndingMessage();
+  }
+
+  public virtual void RunActivityLogic()
   {
     /* 
       Will be overwritten in children classes 
-     */
-  }
-
-  public void SetDuration(int duration)
-  {
-    _duration = duration;
+    */
   }
 
   public void DisplayStartingMessage()
   {
     Console.Clear();
-    Console.WriteLine($"Welcome to the {_name} Activity.\n\n{_description}");
+    Console.WriteLine($"Welcome to the {_name} Activity.\n\n{_description}\n");
   }
 
   public void DisplayEndingMessage()
