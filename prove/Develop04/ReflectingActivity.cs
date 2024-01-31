@@ -58,7 +58,7 @@ class ReflectingActivity : Activity
     Console.WriteLine($"\n --- {prompt} --- \n");
   }
 
-  public void DisplayQuestions(int remainSec, int pauseSec = 10)
+  private void DisplayQuestions(int remainSec, int pauseSec = 10)
   {
     string question;
     while (remainSec > 0)
@@ -81,7 +81,8 @@ class ReflectingActivity : Activity
     int r = _rnd.Next(_prompts.Count);
     int i = _availableQuestions[r];
     _availableQuestions.RemoveAt(r);
+    string randomQuestion = _questions[i];
 
-    return _questions[i];
+    return randomQuestion;
   }
 }

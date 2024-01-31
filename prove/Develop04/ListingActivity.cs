@@ -28,7 +28,7 @@ class ListingActivity : Activity
     base.ShowCountDown(5);
     remainSeconds -= 5;
 
-    Console.WriteLine();
+    Console.WriteLine(); // for the empty output line
     List<string> userList = GetListFromUser(remainSeconds);
     _count = userList.Count;
     Console.Write($"You listed {_count} items!");
@@ -40,7 +40,7 @@ class ListingActivity : Activity
     Console.WriteLine($" --- {prompt} --- ");
   }
 
-  public List<string> GetListFromUser(int remainSeconds)
+  private List<string> GetListFromUser(int remainSeconds)
   {
     string userAnswer;
     List<string> list = new List<string>();

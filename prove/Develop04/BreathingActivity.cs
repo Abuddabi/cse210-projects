@@ -15,7 +15,7 @@ class BreathingActivity : Activity
     string inText = "\n\nBreathe in...";
     string outText = "\nNow breathe out...";
     int count;
-    bool isBreatheIn = true;
+    bool isBreatheIn = true; // start from Breathe in.
     int remainSeconds = base.GetDuration();
 
     Console.Write(inText);

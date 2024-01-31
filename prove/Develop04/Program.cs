@@ -1,30 +1,36 @@
+/* 
+  I made sure no random questions are selected until they have all been used at least once in that session.
+  Also I created separate ConsoleHelper class, which helps to get integer from the user and to show color messages.
+ */
+
 using System;
 
 class Program
 {
   private static readonly ConsoleHelper _console = new ConsoleHelper();
+  private static List<Activity> _activities;
 
   static void Main(string[] args)
   {
-    List<Activity> activities = new List<Activity>()
+    _activities = new List<Activity>()
     {
       new BreathingActivity(),
       new ReflectingActivity(),
       new ListingActivity()
     };
-    int quitOption = activities.Count + 1;
+    int quitOption = _activities.Count + 1;
     int chosenItem;
 
     do
     {
-      PrintMenu(activities);
+      PrintMenu(_activities);
       chosenItem = _console.GetIntFromUser("Select a choice from the menu: ", quitOption);
 
       if (chosenItem < quitOption)
       {
         // turn to index
         chosenItem--;
-        Activity activity = activities[chosenItem];
+        Activity activity = _activities[chosenItem];
         activity.Run();
       }
     } while (chosenItem != quitOption);
