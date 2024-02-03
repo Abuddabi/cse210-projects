@@ -1,16 +1,19 @@
 using System;
+using System.IO;
 
 class GoalManager
 {
   private static ConsoleHelper _console;
   private List<Goal> _goals;
   private int _score;
+  private string _defaultSaveFile;
 
   public GoalManager()
   {
     _console = new ConsoleHelper();
     _goals = new List<Goal>();
     _score = 0;
+    _defaultSaveFile = "goals.txt";
   }
 
   public void Start()
@@ -100,11 +103,78 @@ class GoalManager
 
   public void SaveGoals()
   {
+    string fileName = GetFileName();
 
+    using (StreamWriter outputFile = new StreamWriter(fileName))
+    {
+      outputFile.WriteLine(_score);
+
+      foreach (Goal goal in _goals)
+      {
+        outputFile.WriteLine(goal.GetStringRepresentation());
+      }
+    }
   }
 
   public void LoadGoals()
   {
+    string fileName = GetFileName();
+    string[] lines = File.ReadAllLines(fileName);
 
+    // get score from the first line
+    bool isValid = int.TryParse(lines.First(), out int score);
+    if (!isValid)
+    {
+      score = 0;
+    }
+    _score = score;
+
+    // goals data from second line
+    for (int i = 1, l = lines.Length; i < l; i++)
+    {
+      string[] parts = lines[i].Split(":");
+      string className = parts[0];
+      parts = parts[1].Split(",");
+      string name = parts[0];
+      string description = parts[1];
+      string points = parts[2];
+
+      Goal goal = null;
+
+      switch (className)
+      {
+        case "SimpleGoal":
+          bool isComplete = bool.Parse(parts[3]);
+          goal = new SimpleGoal(name, description, points, isComplete);
+          break;
+        case "EternalGoal":
+          goal = new EternalGoal(name, description, points);
+          break;
+        case "ChecklistGoal":
+          int bonus = int.Parse(parts[3]);
+          int target = int.Parse(parts[4]);
+          int completed = int.Parse(parts[5]);
+          goal = new ChecklistGoal(name, description, points, target, bonus, completed);
+          break;
+      }
+
+      if (goal != null)
+      {
+        _goals.Add(goal);
+      }
+    }
+  }
+
+  private string GetFileName()
+  {
+    Console.Write($"What is the filename for the goal file? (press Enter for default \"{_defaultSaveFile}\") ");
+    string fileName = Console.ReadLine();
+
+    if (fileName.Length == 0)
+    {
+      fileName = _defaultSaveFile;
+    }
+
+    return fileName;
   }
 }

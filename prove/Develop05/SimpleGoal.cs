@@ -19,13 +19,16 @@ class SimpleGoal : Goal
     return _isComplete;
   }
 
-  private void Completed()
+  public void Completed()
   {
     _isComplete = true;
   }
-  
+
   public override string GetStringRepresentation()
   {
-    return "";
+    string representation = base.GetStringRepresentation();
+    representation += $",{_isComplete}";
+
+    return representation;
   }
 }

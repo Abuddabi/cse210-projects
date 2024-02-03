@@ -4,13 +4,13 @@ class Program
 {
   private static ConsoleHelper _console = new ConsoleHelper();
   private static string[] _menu = {
-      "Create New Goal",
-      "List Goals",
-      "Save Goals",
-      "Load Goals",
-      "Record Event",
-      "Quit"
-    };
+    "Create New Goal",
+    "List Goals",
+    "Save Goals",
+    "Load Goals",
+    "Record Event",
+    "Quit"
+  };
 
   static void Main(string[] args)
   {
@@ -34,6 +34,9 @@ class Program
           break;
         case 2:
           goalManager.SaveGoals();
+          break;
+        case 3:
+          goalManager.LoadGoals();
           break;
       }
     } while (userChoice != _menu.Length - 1);

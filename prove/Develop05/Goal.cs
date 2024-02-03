@@ -17,7 +17,13 @@ abstract class Goal
 
   public abstract bool IsComplete();
 
-  public abstract string GetStringRepresentation();
+  public virtual string GetStringRepresentation()
+  {
+    // for each child class className will be individual
+    string className = GetType().Name;
+    string representation = $"{className}:{_shortName},{_description},{_points}";
+    return representation;
+  }
 
   public virtual string GetDetailsString()
   {
