@@ -15,12 +15,19 @@ class ChecklistGoal : Goal
 
   public override void RecordEvent()
   {
-
+    _amountCompleted += 1;
+    base.RecordEvent();
   }
 
-  private void OneMoreGoal()
+  public override int GetPointsInt()
   {
-    _amountCompleted += 1;
+    int points = base.GetPointsInt();
+    if (IsComplete())
+    {
+      points += _bonus;
+    }
+
+    return points;
   }
 
   public override bool IsComplete()

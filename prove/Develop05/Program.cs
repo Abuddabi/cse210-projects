@@ -38,6 +38,9 @@ class Program
         case 3:
           goalManager.LoadGoals();
           break;
+        case 4:
+          goalManager.RecordEvent();
+          break;
       }
     } while (userChoice != _menu.Length - 1);
   }

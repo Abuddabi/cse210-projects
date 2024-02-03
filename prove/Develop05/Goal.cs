@@ -13,7 +13,11 @@ abstract class Goal
     _points = points;
   }
 
-  public abstract void RecordEvent();
+  public virtual void RecordEvent()
+  {
+    int points = GetPointsInt();
+    Console.WriteLine($"Congratulations! You have earned {points} points!");
+  }
 
   public abstract bool IsComplete();
 
@@ -31,5 +35,16 @@ abstract class Goal
     string details = $"[{x}] {_shortName} ({_description})";
 
     return details;
+  }
+
+  public string GetName()
+  {
+    return _shortName;
+  }
+
+  public virtual int GetPointsInt()
+  {
+    int points = int.Parse(_points);
+    return points;
   }
 }
