@@ -10,6 +10,7 @@ class ChecklistGoal : Goal
   {
     _target = target;
     _bonus = bonus;
+    _amountCompleted = 0;
   }
 
   public override void RecordEvent()
@@ -29,6 +30,9 @@ class ChecklistGoal : Goal
 
   public override string GetDetailsString()
   {
-    return "";
+    string details = base.GetDetailsString();
+    details += $" -- Currently completed: {_amountCompleted}/{_target}";
+
+    return details;
   }
 }

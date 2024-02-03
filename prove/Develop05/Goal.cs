@@ -21,6 +21,9 @@ abstract class Goal
 
   public virtual string GetDetailsString()
   {
-    return "";
+    string x = IsComplete() ? "X" : " ";
+    string details = $"[{x}] {_shortName} ({_description})";
+
+    return details;
   }
 }
