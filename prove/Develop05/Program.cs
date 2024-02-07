@@ -1,3 +1,10 @@
+/*
+  I added FileHandler file and I added ASCII art 
+  and print it when user record an event.
+  Minimum console/terminal width for ASCII art - 82!
+  Please, just use your console/terminal in full screen mode.
+ */
+
 using System;
 
 class Program

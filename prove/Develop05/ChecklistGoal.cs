@@ -38,7 +38,8 @@ class ChecklistGoal : Goal
   public override string GetStringRepresentation()
   {
     string representation = base.GetStringRepresentation();
-    representation += $",{_bonus},{_target},{_amountCompleted}";
+    string divider = base.GetDivider();
+    representation += $"{divider}{_bonus}{divider}{_target}{divider}{_amountCompleted}";
     return representation;
   }
 

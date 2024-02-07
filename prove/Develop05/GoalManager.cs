@@ -6,14 +6,14 @@ class GoalManager
   private static ConsoleHelper _console;
   private List<Goal> _goals;
   private int _score;
-  private string _defaultSaveFile;
+  private FileHandler _fHandler;
 
   public GoalManager()
   {
     _console = new ConsoleHelper();
     _goals = new List<Goal>();
     _score = 0;
-    _defaultSaveFile = "goals.txt";
+    _fHandler = new FileHandler();
   }
 
   public void DisplayPlayerInfo()
@@ -23,21 +23,13 @@ class GoalManager
 
   public void ListGoalNames(List<Goal> goals)
   {
+    Console.WriteLine("The goals are:");
     int length = goals.Count;
 
-    if (length > 0)
+    for (int i = 0; i < length; i++)
     {
-      Console.WriteLine("The goals are:");
-
-      for (int i = 0; i < length; i++)
-      {
-        string goalString = goals[i].GetName();
-        Console.WriteLine($"{i + 1}. {goalString}");
-      }
-    }
-    else
-    {
-      Console.WriteLine("You don't have uncompleted goals.");
+      string goalString = goals[i].GetName();
+      Console.WriteLine($"{i + 1}. {goalString}");
     }
   }
 
@@ -109,6 +101,11 @@ class GoalManager
   public void RecordEvent()
   {
     List<Goal> uncompletedGoals = _goals.FindAll(goal => !goal.IsComplete());
+    if (uncompletedGoals.Count == 0)
+    {
+      Console.WriteLine("You don't have uncompleted goals.");
+      return;
+    }
     ListGoalNames(uncompletedGoals);
     int accomplished = _console.GetIntFromUser("Which goal did you accomplish? ", uncompletedGoals.Count);
     accomplished--; // turn to index
@@ -117,89 +114,17 @@ class GoalManager
     goal.RecordEvent();
     _score += goal.GetPointsInt();
     Console.WriteLine($"You now have {_score} points.");
+    _console.PrintGoodJob();
   }
 
   public void SaveGoals()
   {
-    string fileName = GetFileName();
-
-    using (StreamWriter outputFile = new StreamWriter(fileName))
-    {
-      outputFile.WriteLine(_score);
-
-      foreach (Goal goal in _goals)
-      {
-        outputFile.WriteLine(goal.GetStringRepresentation());
-      }
-    }
+    _fHandler.SaveGoals(_score, _goals);
   }
 
   public void LoadGoals()
   {
-    string fileName = GetFileName();
-
-    if (!File.Exists(fileName))
-    {
-      _console.RedMsg($"File \"{fileName}\" doesn't exist.");
-      return;
-    }
-
-    string[] lines = File.ReadAllLines(fileName);
-
-    // get score from the first line
-    bool isValid = int.TryParse(lines.First(), out int score);
-    if (!isValid)
-    {
-      score = 0;
-    }
-    _score = score;
-
-    // goals data from second line
-    for (int i = 1, l = lines.Length; i < l; i++)
-    {
-      string[] parts = lines[i].Split(":");
-      string className = parts[0];
-      parts = parts[1].Split(",");
-      string name = parts[0];
-      string description = parts[1];
-      string points = parts[2];
-
-      Goal goal = null;
-
-      switch (className)
-      {
-        case "SimpleGoal":
-          bool isComplete = bool.Parse(parts[3]);
-          goal = new SimpleGoal(name, description, points, isComplete);
-          break;
-        case "EternalGoal":
-          goal = new EternalGoal(name, description, points);
-          break;
-        case "ChecklistGoal":
-          int bonus = int.Parse(parts[3]);
-          int target = int.Parse(parts[4]);
-          int completed = int.Parse(parts[5]);
-          goal = new ChecklistGoal(name, description, points, target, bonus, completed);
-          break;
-      }
-
-      if (goal != null)
-      {
-        _goals.Add(goal);
-      }
-    }
-  }
-
-  private string GetFileName()
-  {
-    Console.Write($"What is the filename for the goal file? (press Enter for default \"{_defaultSaveFile}\") ");
-    string fileName = Console.ReadLine();
-
-    if (fileName.Length == 0)
-    {
-      fileName = _defaultSaveFile;
-    }
-
-    return fileName;
+    _goals = _fHandler.LoadGoals();
+    _score = _fHandler.GetScoreFromLoad();
   }
 }

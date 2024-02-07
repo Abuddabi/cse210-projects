@@ -22,8 +22,9 @@ class SimpleGoal : Goal
 
   public override string GetStringRepresentation()
   {
+    string divider = base.GetDivider();
     string representation = base.GetStringRepresentation();
-    representation += $",{_isComplete}";
+    representation += $"{divider}{_isComplete}";
 
     return representation;
   }

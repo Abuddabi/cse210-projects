@@ -79,4 +79,42 @@ class ConsoleHelper
 
     return condition;
   }
+
+  public void PrintGoodJob()
+  {
+    string[] phrase = new string[]
+    {
+      "    ______                             __           _____            __        __ ",
+      "   /      \\                           /  |         /     |          /  |      /  |",
+      "  /$$$$$$  |  ______    ______    ____$$ |         $$$$$ |  ______  $$ |____  $$ |",
+      "  $$ | _$$/  /      \\  /      \\  /    $$ |            $$ | /      \\ $$      \\ $$ |",
+      "  $$ |/    |/$$$$$$  |/$$$$$$  |/$$$$$$$ |       __   $$ |/$$$$$$  |$$$$$$$  |$$ |",
+      "  $$ |$$$$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |      /  |  $$ |$$ |  $$ |$$ |  $$ |$$/ ",
+      "  $$ \\__$$ |$$ \\__$$ |$$ \\__$$ |$$ \\__$$ |      $$ \\__$$ |$$ \\__$$ |$$ |__$$ | __ ",
+      "  $$    $$/ $$    $$/ $$    $$/ $$    $$ |      $$    $$/ $$    $$/ $$    $$/ /  |",
+      "   $$$$$$/   $$$$$$/   $$$$$$/   $$$$$$$/        $$$$$$/   $$$$$$/  $$$$$$$/  $$/ ",
+      "                                                                                  "
+    };
+
+    Console.BackgroundColor = ConsoleColor.Black;
+    Console.WriteLine("\n");
+    Console.ForegroundColor = ConsoleColor.White;
+    Thread.Sleep(400);
+    for (int i = 0, l = phrase.Length; i < l; i++)
+    {
+      if (i == 5)
+      {
+        Console.ForegroundColor = ConsoleColor.Blue;
+      }
+      else if (i == 7)
+      {
+        Console.ForegroundColor = ConsoleColor.Red;
+      }
+      Console.WriteLine(phrase[i]);
+      Thread.Sleep(300);
+    }
+    Console.WriteLine("\n");
+    Console.ResetColor();
+    Thread.Sleep(1000);
+  }
 }
