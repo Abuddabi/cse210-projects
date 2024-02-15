@@ -5,11 +5,30 @@ class Program
   static void Main(string[] args)
   {
     Console.WriteLine("Welcome to the Console Chat Application!");
-    UsersManager usersManager = new UsersManager();
-    Console.Write("\nPlease, write your username: ");
-    string username = Console.ReadLine();
 
-    Console.WriteLine("Here are all users of the chat: ");
+    ConsoleHelper console = new ConsoleHelper();
+    UsersManager usersManager = new UsersManager();
+    bool authFinished;
+
+    do
+    {
+      Console.WriteLine("\n"
+      + "Do you want to: \n"
+      + "1. Login\n"
+      + "2. Signup");
+      int userInput = console.GetIntFromUser("Please write your answer: ", 2);
+
+      if (userInput == 1)
+        authFinished = usersManager.Login();
+      else if (userInput == 2)
+        authFinished = usersManager.Signup();
+      else
+        authFinished = false;
+    } while (!authFinished);
+
+    Console.WriteLine("\nHere are all users of the chat: ");
+
+    // TODO
 
 
     User user1 = new User("User1");
