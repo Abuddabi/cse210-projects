@@ -19,11 +19,10 @@ class NetworkHelper
         IPInterfaceProperties ipProperties = networkInterface.GetIPProperties();
         IPAddress ipAddress = ipProperties.UnicastAddresses
             .FirstOrDefault(addr => addr.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?.Address;
-        string ip = ipAddress.ToString();
-
-        if (ip.Contains("192.168.1"))
+        
+        if (ipAddress.ToString().Contains("192.168.1"))
         {
-          result = ip;
+          result = ipAddress.ToString();
           break; 
         }
     }
