@@ -1,36 +1,26 @@
 using System;
-using System.Net;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Net.NetworkInformation;
 
 class NetworkHelper
 {
   public static void GetLocalIp()
   {
-    // Get all network interfaces
-        NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+    string hostName = Dns.GetHostName();
 
-        // Filter out loopback and non-operational interfaces
-        NetworkInterface localInterface = networkInterfaces
-            .FirstOrDefault(n => n.NetworkInterfaceType != NetworkInterfaceType.Loopback && n.OperationalStatus == OperationalStatus.Up);
+        // Get the IP addresses associated with the host
+        IPAddress[] addresses = Dns.GetHostAddresses(hostName);
 
-        if (localInterface != null)
+        // Find the IPv4 address
+        foreach (IPAddress address in addresses)
         {
-            IPInterfaceProperties ipProperties = localInterface.GetIPProperties();
-            UnicastIPAddressInformationCollection unicastAddresses = ipProperties.UnicastAddresses;
-
-            foreach (UnicastIPAddressInformation unicastAddress in unicastAddresses)
+            if (address.AddressFamily == AddressFamily.InterNetwork)
             {
-                if (unicastAddress.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                {
-                    Console.WriteLine($"Interface: {localInterface.Name}, IP Address: {unicastAddress.Address}");
-                    break; // Exit the loop after printing the first IP address
-                }
+                Console.WriteLine($"Local IP Address: {address}");
+                break;
             }
-        }
-        else
-        {
-            Console.WriteLine("No active local interfaces found.");
         }
   }
 }
