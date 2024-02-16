@@ -79,4 +79,24 @@ class ConsoleHelper
 
     return condition;
   }
+
+  public void ShowCountDown(int seconds)
+  {
+    for (int i = seconds; i > 0; i--)
+    {
+      Console.Write(i);
+      Thread.Sleep(1000);
+      Console.Write("\b \b");
+    }
+  }
+
+  public async Task ShowCountdownAsync(int seconds)
+  {
+    for (int i = seconds; i > 0; i--)
+    {
+      Console.Write(i);
+      await Task.Delay(1000);
+      Console.Write("\b \b");
+    }
+  }
 }
