@@ -6,10 +6,12 @@ class Program
   static ConsoleHelper _console = new ConsoleHelper();
   static UsersManager _usersManager = new UsersManager();
   static RoomsManager _roomsManager = new RoomsManager();
+  static User _currentUser;
 
   static void Main(string[] args)
   {
-    Console.WriteLine("Welcome to the Console Chat Application!");
+    Console.Clear();
+    Console.WriteLine("\nWelcome to the Console Chat Application!");
     Start();
     RunMenu();
     Console.WriteLine("Chat ended. Goodbye!");
@@ -17,14 +19,18 @@ class Program
 
   private static void Start()
   {
+    _usersManager.LoadUsers();
     bool authFinished = false;
     while (!authFinished)
     {
       authFinished = Authentication();
     }
-    _usersManager.LoadUsers();
+    _currentUser = _usersManager.GetCurrentUser();
+    Console.Clear();
+    _console.GreenMsg($"\nHello {_currentUser.GetUsername()}! Welcome to the Console Chat Application!");
     string[] availableRooms = { "Main", "Nature", "Music", "Games", "Gospel" };
     _roomsManager.AddRooms(availableRooms);
+    _roomsManager.LoadChatMessages();
   }
 
   private static bool Authentication()
@@ -98,6 +104,12 @@ class Program
   private static void ChooseRoom()
   {
     string roomName = _console.GetStringFromUser("Please write the name of the chat room you want to start speaking in: ", false);
-
+    ChatRoom room = _roomsManager.FindRoomByName(roomName);
+    if (room == null)
+    {
+      _console.RedMsg($"{roomName} room doesn't exist. Try another one.");
+      return;
+    }
+    room.StartChat(_currentUser);
   }
 }

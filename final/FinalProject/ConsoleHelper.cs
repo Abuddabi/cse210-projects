@@ -9,22 +9,26 @@ class ConsoleHelper
     _invalidMsg = "Your input is incorrect. Try one more time.";
   }
 
-  private static void Write(string msg)
+  private static void Write(string msg, bool line)
   {
-    Console.WriteLine(msg);
-    Console.ForegroundColor = ConsoleColor.White;
+    if (line)
+      Console.WriteLine(msg);
+    else
+      Console.Write(msg);
+    Console.ResetColor();
+    // Console.ForegroundColor = ConsoleColor.White;
   }
 
-  public void GreenMsg(string msg)
+  public void GreenMsg(string msg, bool line = true)
   {
     Console.ForegroundColor = ConsoleColor.Green;
-    Write(msg);
+    Write(msg, line);
   }
 
-  public void RedMsg(string msg)
+  public void RedMsg(string msg, bool line = true)
   {
     Console.ForegroundColor = ConsoleColor.Red;
-    Write(msg);
+    Write(msg, line);
   }
 
   public int GetIntFromUser(string askMsg, int maxValue = int.MaxValue, int minValue = 1)

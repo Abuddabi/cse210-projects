@@ -57,7 +57,7 @@ class UsersManager
     bool passwordValid;
     do
     {
-      string password = _console.GetStringFromUser("\nPlease, write password: ");
+      string password = _console.GetStringFromUser("Please, write password: ");
       passwordValid = _authManager.AuthenticateUser(username, password);
     } while (!passwordValid);
 
@@ -76,7 +76,7 @@ class UsersManager
     }
     User newUser = new User(username);
     _users.Add(newUser);
-    string password = _console.GetStringFromUser("\nPlease, write password: ");
+    string password = _console.GetStringFromUser("Please, write password: ");
     _authManager.SetPassword(username, password);
     SaveUser(username, password);
 
@@ -87,7 +87,7 @@ class UsersManager
 
   private void SaveUser(string username, string password)
   {
-    using (StreamWriter outputFile = new StreamWriter(_fileName))
+    using (StreamWriter outputFile = new StreamWriter(_fileName, true))
     {
       outputFile.WriteLine($"{username}{_delimiter}{password}");
     }
@@ -117,5 +117,10 @@ class UsersManager
     {
       Console.WriteLine(user.GetUsername());
     }
+  }
+
+  public User GetCurrentUser()
+  {
+    return _currentUser;
   }
 }

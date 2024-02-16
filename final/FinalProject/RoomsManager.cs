@@ -29,4 +29,21 @@ class RoomsManager
       Console.WriteLine(room.GetName());
     }
   }
+
+  public ChatRoom FindRoomByName(string name)
+  {
+    foreach (ChatRoom room in _rooms)
+    {
+      if (room.GetName() == name)
+        return room;
+    }
+    return null;
+  }
+
+  public void LoadChatMessages()
+  {
+    string fileName = "chats.txt";
+
+    // TODO
+  }
 }

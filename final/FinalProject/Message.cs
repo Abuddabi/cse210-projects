@@ -2,17 +2,22 @@ class Message
 {
   private User _sender;
   private string _content;
-  private DateTime _timestamp;
+  private string _date;
 
   public Message(User sender, string content)
   {
     _sender = sender;
     _content = content;
-    _timestamp = DateTime.Now;
+    _date = DateTime.Now.ToString("dd MMM HH:mm");
   }
 
   public string GetContent()
   {
     return _content;
+  }
+
+  public string GetChatLine()
+  {
+    return $"{_date} {_sender.GetUsername()}: {_content}";
   }
 }
