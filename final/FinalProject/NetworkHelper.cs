@@ -6,8 +6,10 @@ using System.Net.NetworkInformation;
 
 class NetworkHelper
 {
-  public static void GetLocalIp()
+  public string GetLocalIp()
   {
+    string result = "";
+
     NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces()
         .Where(n => n.OperationalStatus == OperationalStatus.Up && n.NetworkInterfaceType != NetworkInterfaceType.Loopback)
         .ToArray();
@@ -17,11 +19,15 @@ class NetworkHelper
         IPInterfaceProperties ipProperties = networkInterface.GetIPProperties();
         IPAddress ipAddress = ipProperties.UnicastAddresses
             .FirstOrDefault(addr => addr.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?.Address;
+        string ip = ipAddress.ToString();
 
-        if (ipAddress != null)
+        if (ip.Contains("192.168.1"))
         {
-            Console.WriteLine($"Interface: {networkInterface.Name}, IP Address: {ipAddress}");
+          result = ip;
+          break; 
         }
     }
+
+    return result;
   }
 }
