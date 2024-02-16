@@ -4,7 +4,7 @@ class ChatRoom
   private ConsoleHelper _console = new ConsoleHelper();
   private string _name;
   private User _currentUser;
-  private string _delimiter = "~|~";
+  private FileHandler _fileHandler = new FileHandler();
 
   public ChatRoom(string name)
   {
@@ -17,10 +17,14 @@ class ChatRoom
     Message message = new Message(sender, content);
     _messages.Add(message);
 
-    using (StreamWriter outputFile = new StreamWriter("chats.txt", true))
-    {
-      outputFile.WriteLine($"{_name}{_delimiter}{message.GetChatLine()}");
-    }
+    string delimiter = _fileHandler.GetDelimiter();
+    string textForFile = $"{_name}{delimiter}{message.GetTextForFile()}";
+    _fileHandler.AppendToFile("chats.txt", textForFile);
+  }
+
+  public void AddMessage(Message msg)
+  {
+    _messages.Add(msg);
   }
 
   public List<Message> GetMessages()

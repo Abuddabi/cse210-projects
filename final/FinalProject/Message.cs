@@ -2,13 +2,21 @@ class Message
 {
   private User _sender;
   private string _content;
-  private string _date;
+  private DateTime _timestamp;
+  private FileHandler _fileHandler = new FileHandler();
 
   public Message(User sender, string content)
   {
     _sender = sender;
     _content = content;
-    _date = DateTime.Now.ToString("dd MMM HH:mm");
+    _timestamp = DateTime.Now;
+  }
+
+  public Message(User sender, string content, string date)
+  {
+    _sender = sender;
+    _content = content;
+    _timestamp = DateTime.Parse(date);
   }
 
   public string GetContent()
@@ -18,6 +26,18 @@ class Message
 
   public string GetChatLine()
   {
-    return $"{_date} {_sender.GetUsername()}: {_content}";
+    return $"{FormatDate()} {_sender.GetUsername()}: {_content}";
+  }
+
+  private string FormatDate()
+  {
+    return _timestamp.ToString("dd MMM HH:mm");
+  }
+
+  public string GetTextForFile()
+  {
+    string delimiter = _fileHandler.GetDelimiter();
+    string dateStr = _timestamp.ToString("o");
+    return $"{dateStr}{delimiter}{_sender.GetUsername()}{delimiter}{_content}";
   }
 }

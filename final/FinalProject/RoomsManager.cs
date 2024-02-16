@@ -1,6 +1,7 @@
 class RoomsManager
 {
   private List<ChatRoom> _rooms;
+  private FileHandler _fileHandler = new FileHandler();
 
   public RoomsManager()
   {
@@ -43,7 +44,32 @@ class RoomsManager
   public void LoadChatMessages()
   {
     string fileName = "chats.txt";
+    string delimiter = _fileHandler.GetDelimiter();
 
-    // TODO
+    string[] lines = File.ReadAllLines(fileName);
+
+    string[] parts;
+    string chatRoomName;
+    string date;
+    string username;
+    string text;
+    User user;
+    ChatRoom room;
+    Message msg;
+    for (int i = 0, l = lines.Length; i < l; i++)
+    {
+      parts = lines[i].Split(delimiter);
+      chatRoomName = parts[0];
+      room = FindRoomByName(chatRoomName);
+      if (room == null)
+        continue;
+      date = parts[1];
+      username = parts[2];
+      text = parts[3];
+
+      user = new User(username);
+      msg = new Message(user, text, date);
+      room.AddMessage(msg);
+    }
   }
 }

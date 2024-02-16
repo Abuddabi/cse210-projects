@@ -3,7 +3,7 @@ class UsersManager
   private List<User> _users;
   private AuthManager _authManager = new AuthManager();
   private ConsoleHelper _console = new ConsoleHelper();
-  private string _delimiter = "~|~";
+  private FileHandler _fileHandler = new FileHandler();
   private string _fileName = "users.txt";
   private User _currentUser;
 
@@ -21,6 +21,7 @@ class UsersManager
   {
     // in future we can change it to database
     string[] lines = File.ReadAllLines(_fileName);
+    string delimiter = _fileHandler.GetDelimiter();
 
     string[] parts;
     string username;
@@ -28,7 +29,7 @@ class UsersManager
     User user;
     for (int i = 0, l = lines.Length; i < l; i++)
     {
-      parts = lines[i].Split(_delimiter);
+      parts = lines[i].Split(delimiter);
       username = parts[0];
       password = parts[1];
       _authManager.SetPassword(username, password);
@@ -87,10 +88,9 @@ class UsersManager
 
   private void SaveUser(string username, string password)
   {
-    using (StreamWriter outputFile = new StreamWriter(_fileName, true))
-    {
-      outputFile.WriteLine($"{username}{_delimiter}{password}");
-    }
+    string delimiter = _fileHandler.GetDelimiter();
+    string testForFile = $"{username}{delimiter}{password}";
+    _fileHandler.AppendToFile(_fileName, testForFile);
   }
 
   public bool IsUserExists(string username)
