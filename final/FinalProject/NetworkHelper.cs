@@ -8,19 +8,20 @@ class NetworkHelper
 {
   public static void GetLocalIp()
   {
-    string hostName = Dns.GetHostName();
+    NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces()
+        .Where(n => n.OperationalStatus == OperationalStatus.Up && n.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+        .ToArray();
 
-        // Get the IP addresses associated with the host
-        IPAddress[] addresses = Dns.GetHostAddresses(hostName);
+    foreach (NetworkInterface networkInterface in networkInterfaces)
+    {
+        IPInterfaceProperties ipProperties = networkInterface.GetIPProperties();
+        IPAddress ipAddress = ipProperties.UnicastAddresses
+            .FirstOrDefault(addr => addr.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?.Address;
 
-        // Find the IPv4 address
-        foreach (IPAddress address in addresses)
+        if (ipAddress != null)
         {
-            if (address.AddressFamily == AddressFamily.InterNetwork)
-            {
-                Console.WriteLine($"Local IP Address: {address}");
-                break;
-            }
+            Console.WriteLine($"Interface: {networkInterface.Name}, IP Address: {ipAddress}");
         }
+    }
   }
 }
