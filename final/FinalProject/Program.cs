@@ -1,66 +1,103 @@
 using System;
+using System.Security.Authentication;
 
 class Program
 {
+  static ConsoleHelper _console = new ConsoleHelper();
+  static UsersManager _usersManager = new UsersManager();
+  static RoomsManager _roomsManager = new RoomsManager();
+
   static void Main(string[] args)
   {
-    ConsoleHelper console = new ConsoleHelper();
-    UsersManager usersManager = new UsersManager();
-
     Console.WriteLine("Welcome to the Console Chat Application!");
+    Start();
+    RunMenu();
+    Console.WriteLine("Chat ended. Goodbye!");
+  }
 
-    bool authFinished;
-    do
+  private static void Start()
+  {
+    bool authFinished = false;
+    while (!authFinished)
     {
-      Console.WriteLine("\n"
+      authFinished = Authentication();
+    }
+    _usersManager.LoadUsers();
+    string[] availableRooms = { "Main", "Nature", "Music", "Games", "Gospel" };
+    _roomsManager.AddRooms(availableRooms);
+  }
+
+  private static bool Authentication()
+  {
+    Console.WriteLine("\n"
       + "Do you want to: \n"
       + "1. Login\n"
       + "2. Signup");
-      int userInput = console.GetIntFromUser("Please write your answer: ", 2);
+    int userInt = _console.GetIntFromUser("Please write your answer: ", 2);
 
-      if (userInput == 1)
-        authFinished = usersManager.Login();
-      else if (userInput == 2)
-        authFinished = usersManager.Signup();
-      else
-        authFinished = false;
-    } while (!authFinished);
+    bool authFinished;
+    if (userInt == 1)
+      authFinished = _usersManager.Login();
+    else if (userInt == 2)
+      authFinished = _usersManager.Signup();
+    else
+      authFinished = false;
 
-    Console.WriteLine("\nHere are all users of the chat: ");
-    
-    // TODO
+    return authFinished;
+  }
 
+  private static void RunMenu()
+  {
+    string[] menu = {
+      "Show other Users",
+      "Show available chat rooms",
+      "Choose the chat room",
+      "Exit",
+    };
+    int exitInt = menu.Length;
 
-    User user1 = new User("User1");
-    User user2 = new User("User2");
-
-    ChatRoom chatRoom = new ChatRoom();
-
-    Console.WriteLine($"You are now chatting as {user1.GetUsername()}");
-    Console.WriteLine("Type 'exit' to end the chat");
-
-    string messageContent = "";
-
-    while (messageContent != "exit")
+    bool exit = false;
+    while (!exit)
     {
-      Console.Write("You: ");
-      // message from current user
-      messageContent = Console.ReadLine();
-
-      chatRoom.SendMessage(user1, user2, messageContent);
-
-      Console.WriteLine("Waiting for response...");
-
-      // Simulate response time
-      System.Threading.Thread.Sleep(1000);
-
-      List<Message> messages = chatRoom.GetMessages();
-      foreach (Message message in messages)
+      Console.WriteLine("\nMENU: \n");
+      for (int i = 0, l = exitInt; i < l; i++)
       {
-        Console.WriteLine($"{message.GetRecipient().GetUsername()}: {message.GetContent()}");
+        Console.WriteLine($"  {i + 1}. {menu[i]}");
       }
-    }
 
-    Console.WriteLine("Chat ended. Goodbye!");
+      int userChoice = _console.GetIntFromUser("Please choose menu option: ", exitInt);
+      switch (userChoice)
+      {
+        case 1:
+          ShowUsers();
+          break;
+        case 2:
+          ShowRooms();
+          break;
+        case 3:
+          ChooseRoom();
+          break;
+      }
+
+      exit = userChoice == exitInt;
+    }
+  }
+
+  private static void ShowUsers()
+  {
+    Console.WriteLine("\nHere are all other users of the chat: ");
+    _usersManager.PrintUsers(true);
+  }
+
+  private static void ShowRooms()
+  {
+    Console.WriteLine("\nThere are several available rooms for chatting: ");
+    _roomsManager.PrintAllRooms();
+  }
+
+  private static void ChooseRoom()
+  {
+    string roomName = _console.GetStringFromUser("Please write the name of the chat room you want to start speaking in: ", false);
+
   }
 }

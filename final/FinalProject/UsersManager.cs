@@ -5,6 +5,7 @@ class UsersManager
   private ConsoleHelper _console = new ConsoleHelper();
   private string _delimiter = "~|~";
   private string _fileName = "users.txt";
+  private User _currentUser;
 
   public UsersManager()
   {
@@ -60,6 +61,8 @@ class UsersManager
       passwordValid = _authManager.AuthenticateUser(username, password);
     } while (!passwordValid);
 
+    _currentUser = new User(username);
+
     return true;
   }
 
@@ -76,6 +79,8 @@ class UsersManager
     string password = _console.GetStringFromUser("\nPlease, write password: ");
     _authManager.SetPassword(username, password);
     SaveUser(username, password);
+
+    _currentUser = newUser;
 
     return true;
   }
@@ -96,5 +101,21 @@ class UsersManager
         return true;
     }
     return false;
+  }
+
+  public void PrintUsers(bool withoutCurrent = false)
+  {
+    List<User> users = _users;
+
+    if (withoutCurrent && _currentUser != null)
+    {
+      string currentUsername = _currentUser.GetUsername();
+      users = _users.Where(user => user.GetUsername() != currentUsername).ToList();
+    }
+
+    foreach (User user in users)
+    {
+      Console.WriteLine(user.GetUsername());
+    }
   }
 }
