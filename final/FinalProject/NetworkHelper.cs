@@ -20,7 +20,7 @@ class NetworkHelper
         IPAddress ipAddress = ipProperties.UnicastAddresses
             .FirstOrDefault(addr => addr.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?.Address;
         
-        if (ipAddress.ToString().Contains("192.168.1"))
+        if (ipAddress != null && ipAddress.ToString().Contains("192.168.1"))
         {
           result = ipAddress.ToString();
           break; 
