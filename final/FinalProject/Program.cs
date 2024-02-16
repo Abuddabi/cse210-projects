@@ -4,34 +4,12 @@ class Program
 {
   static void Main(string[] args)
   {
-    NetworkHelper network = new NetworkHelper();
     ConsoleHelper console = new ConsoleHelper();
+    UsersManager usersManager = new UsersManager();
 
     Console.WriteLine("Welcome to the Console Chat Application!");
-    Console.Write("\nListening for other users in local network: ");
-    console.ShowCountdownAsync(5);
 
-    // Discover services
-    bool serviceDiscovered = network.DiscoverServices(5 * 1000);
-    if (!serviceDiscovered)
-    {
-      Console.WriteLine("\nNo other users in local network. Announce service.");
-      // Announce the service if no services were discovered
-      network.AnnounceService("Chat_Service", 1234);
-    }
-    else
-    {
-      Console.WriteLine("Found Service!");
-    }
-
-    // Wait for user input to exit
-    Console.WriteLine("Press any key to exit...");
-    Console.ReadKey();
-    return;
-
-    UsersManager usersManager = new UsersManager();
     bool authFinished;
-
     do
     {
       Console.WriteLine("\n"
@@ -49,7 +27,7 @@ class Program
     } while (!authFinished);
 
     Console.WriteLine("\nHere are all users of the chat: ");
-
+    
     // TODO
 
 
