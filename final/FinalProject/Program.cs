@@ -4,6 +4,8 @@ class Program
 {
   static void Main(string[] args)
   {
+    NetworkHelper.GetLocalIp();
+    return;
     Console.WriteLine("Welcome to the Console Chat Application!");
 
     ConsoleHelper console = new ConsoleHelper();

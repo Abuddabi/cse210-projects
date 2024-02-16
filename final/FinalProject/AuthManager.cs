@@ -6,6 +6,7 @@ class AuthManager
   public AuthManager()
   {
     _console = new ConsoleHelper();
+    _usersPasswords = new Dictionary<string, string>();
   }
 
   public AuthManager(List<User> users)
