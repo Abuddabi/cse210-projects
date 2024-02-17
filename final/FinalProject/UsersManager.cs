@@ -17,7 +17,7 @@ class UsersManager
     _users = users;
   }
 
-  public List<User> LoadUsers()
+  public void LoadUsers()
   {
     // in future we can change it to database
     string[] lines = File.ReadAllLines(_fileName);
@@ -26,19 +26,21 @@ class UsersManager
     string[] parts;
     string username;
     string password;
+    int type;
+    bool isBlocked;
     User user;
     for (int i = 0, l = lines.Length; i < l; i++)
     {
       parts = lines[i].Split(delimiter);
       username = parts[0];
       password = parts[1];
+      type = int.Parse(parts[2]);
+      isBlocked = bool.Parse(parts[3]);
       _authManager.SetPassword(username, password);
 
-      user = new User(username);
+      user = new User(username, type, isBlocked);
       _users.Add(user);
     }
-
-    return _users;
   }
 
   public List<User> GetUsers()
@@ -60,9 +62,11 @@ class UsersManager
     {
       string password = _console.GetStringFromUser("Please, write password: ");
       passwordValid = _authManager.AuthenticateUser(username, password);
+      if (!passwordValid)
+        _console.RedMsg("Password is invalid. Try one more time.");
     } while (!passwordValid);
 
-    _currentUser = new User(username);
+    _currentUser = GetUserByUsername(username);
 
     return true;
   }
@@ -122,5 +126,10 @@ class UsersManager
   public User GetCurrentUser()
   {
     return _currentUser;
+  }
+
+  public User GetUserByUsername(string username)
+  {
+    return _users.FirstOrDefault(u => u.GetUsername() == username);
   }
 }

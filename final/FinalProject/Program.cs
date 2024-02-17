@@ -53,19 +53,27 @@ class Program
 
   private static void RunMenu()
   {
-    string[] menu = {
-      "Show other Users",
-      "Show available chat rooms",
-      "Choose the chat room",
-      "Exit",
+    List<string> menu = new List<string>
+    {
+        "Show other Users",
+        "Show available chat rooms",
+        "Choose the chat room",
+        "Exit"
     };
-    int exitInt = menu.Length;
+    if (_currentUser.GetUserType() > 1)
+    {
+      menu.InsertRange(0, new List<string> {
+        "Add new room",
+        "Delete room"
+      });
+    }
+    int exitInt = menu.Count;
 
     bool exit = false;
     while (!exit)
     {
-      Console.WriteLine("\nMENU: \n");
-      for (int i = 0, l = exitInt; i < l; i++)
+      Console.WriteLine("\nMENU: ");
+      for (int i = 0; i < exitInt; i++)
       {
         Console.WriteLine($"  {i + 1}. {menu[i]}");
       }
