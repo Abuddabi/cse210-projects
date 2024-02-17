@@ -14,7 +14,7 @@ class Program
     Console.WriteLine("\nWelcome to the Console Chat Application!");
     Start();
     RunMenu();
-    Console.WriteLine("Chat ended. Goodbye!");
+    Console.WriteLine("\nChat ended. Goodbye!");
   }
 
   private static void Start()
@@ -60,16 +60,16 @@ class Program
     {
         "Show other Users",
         "Show available chat rooms",
-        "Choose the chat room",
-        "Exit"
+        "Choose the chat room"
     };
     if (_currentUser.GetUserType() > 1)
     {
-      menu.InsertRange(0, new List<string> {
+      menu.AddRange(new List<string> {
         "Add new room",
         "Delete room"
       });
     }
+    menu.Add("Exit");
     int exitInt = menu.Count;
 
     bool exit = false;
@@ -92,6 +92,12 @@ class Program
           break;
         case 3:
           ChooseRoom();
+          break;
+        case 4:
+          CreateRoom();
+          break;
+        case 5:
+          DeleteRoom();
           break;
       }
 
@@ -121,5 +127,31 @@ class Program
       return;
     }
     room.StartChat(_currentUser);
+  }
+
+  private static void CreateRoom()
+  {
+    string roomName = _console.GetStringFromUser("Please write the name of the new room: ", false);
+    ChatRoom exist = _roomsManager.FindRoomByName(roomName);
+    if (exist != null)
+    {
+      _console.RedMsg($"Room {roomName} is already exist.");
+      return;
+    }
+    _roomsManager.CreateNewRoom(roomName);
+    _console.GreenMsg($"\nRoom {roomName} is created.");
+  }
+
+  private static void DeleteRoom()
+  {
+    string roomName = _console.GetStringFromUser("Please write the name of the room which you want to delete: ", false);
+    ChatRoom exist = _roomsManager.FindRoomByName(roomName);
+    if (exist == null)
+    {
+      _console.RedMsg($"Room {roomName} doesn't exist.");
+      return;
+    }
+    _roomsManager.DeleteRoom(roomName);
+    _console.GreenMsg($"\nRoom {roomName} is deleted.");
   }
 }

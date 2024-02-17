@@ -15,11 +15,39 @@ class RoomsManager
 
   public void AddRooms(string[] rooms)
   {
-    ChatRoom room;
     foreach (string roomName in rooms)
     {
-      room = new ChatRoom(roomName);
-      _rooms.Add(room);
+      AddRoom(roomName);
+    }
+  }
+
+  public void AddRoom(string roomName)
+  {
+    ChatRoom room = new ChatRoom(roomName);
+    _rooms.Add(room);
+  }
+
+  public void CreateNewRoom(string roomName)
+  {
+    AddRoom(roomName);
+    _fileHandler.AppendToFile("rooms.txt", roomName);
+  }
+
+  public void DeleteRoom(string deleteRoom)
+  {
+    _rooms.RemoveAll(r => r.GetName() == deleteRoom);
+
+    string fileName = "rooms.txt";
+    string[] rooms = File.ReadAllLines(fileName);
+
+    using (StreamWriter writer = new StreamWriter(fileName))
+    {
+      foreach (string roomName in rooms)
+      {
+        if (roomName == deleteRoom)
+          continue;
+        writer.WriteLine(roomName);
+      }
     }
   }
 
