@@ -26,8 +26,11 @@ class Program
       authFinished = Authentication();
     }
     _currentUser = _usersManager.GetCurrentUser();
+    int userType = _currentUser.GetUserType();
+    string typeGreeting = userType > 2 ? " You're Admin." : userType > 1 ? " You're Moderator." : "";
+
     Console.Clear();
-    _console.GreenMsg($"\nHello {_currentUser.GetUsername()}! Welcome to the Console Chat Application!");
+    _console.GreenMsg($"\nHello {_currentUser.GetUsername()}!{typeGreeting} Welcome to the Console Chat Application!");
     _roomsManager.LoadRooms();
     _roomsManager.LoadChatMessages();
   }
