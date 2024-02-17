@@ -23,6 +23,13 @@ class RoomsManager
     }
   }
 
+  public void LoadRooms()
+  {
+    string fileName = "rooms.txt";
+    string[] rooms = File.ReadAllLines(fileName);
+    AddRooms(rooms);
+  }
+
   public void PrintAllRooms()
   {
     foreach (ChatRoom room in _rooms)

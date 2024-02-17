@@ -51,11 +51,11 @@ class ChatRoom
     Console.SetCursorPosition(0, Console.WindowHeight - 3);
     // Write new content at the bottom of the console
     _console.GreenMsg($"Now you are in {_name} chat room.");
-    Console.WriteLine("To exit the room type \"exit!\"");
+    Console.WriteLine("To exit the room type \"exit\"");
     _console.GreenMsg($"{_currentUser.GetUsername()}: ", false);
     string userMsg = Console.ReadLine();
 
-    while (userMsg != "exit!")
+    while (userMsg != "exit")
     {
       SendMessage(_currentUser, userMsg);
       UpdateChatDisplay();
@@ -70,7 +70,8 @@ class ChatRoom
     {
       Console.WriteLine(msg.GetChatLine());
     }
-    Console.SetCursorPosition(0, Console.WindowHeight - 1);
+    Console.SetCursorPosition(0, Console.WindowHeight - 2);
+    Console.WriteLine("To exit the room type \"exit\"");
     _console.GreenMsg($"{_currentUser.GetUsername()}: ", false);
   }
 }

@@ -28,8 +28,7 @@ class Program
     _currentUser = _usersManager.GetCurrentUser();
     Console.Clear();
     _console.GreenMsg($"\nHello {_currentUser.GetUsername()}! Welcome to the Console Chat Application!");
-    string[] availableRooms = { "Main", "Nature", "Music", "Games", "Gospel" };
-    _roomsManager.AddRooms(availableRooms);
+    _roomsManager.LoadRooms();
     _roomsManager.LoadChatMessages();
   }
 

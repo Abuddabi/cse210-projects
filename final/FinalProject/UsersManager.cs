@@ -79,17 +79,17 @@ class UsersManager
     _users.Add(newUser);
     string password = _console.GetStringFromUser("Please, write password: ");
     _authManager.SetPassword(username, password);
-    SaveUser(username, password);
+    SaveUser(newUser, password);
 
     _currentUser = newUser;
 
     return true;
   }
 
-  private void SaveUser(string username, string password)
+  private void SaveUser(User user, string password)
   {
     string delimiter = _fileHandler.GetDelimiter();
-    string testForFile = $"{username}{delimiter}{password}";
+    string testForFile = $"{user.GetUsername()}{delimiter}{password}{delimiter}{user.GetUserType()}";
     _fileHandler.AppendToFile(_fileName, testForFile);
   }
 
