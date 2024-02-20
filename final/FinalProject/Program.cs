@@ -58,22 +58,22 @@ class Program
   private static void RunMenu()
   {
     List<string> menu;
-    int exitInt;
+    int exitInt = 0;
     bool exit = false;
     while (!exit)
     {
       menu = GetMenu();
-      exitInt = menu.Count;
       Console.WriteLine("\nMENU: ");
-      for (int i = 0, j = 1; i < exitInt; i++)
+      for (int i = 0, j = 0, l = menu.Count; i < l; i++)
       {
         if (menu[i] == "=")
           Console.WriteLine("  ====================");
         else
         {
-          Console.WriteLine($"  {j}. {menu[i]}");
           j++;
+          Console.WriteLine($"  {j}. {menu[i]}");
         }
+        exitInt = j;
       }
 
       int userChoice = _console.GetIntFromUser("Please choose menu option: ", exitInt);
