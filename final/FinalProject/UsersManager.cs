@@ -38,7 +38,13 @@ class UsersManager
       isBlocked = bool.Parse(parts[3]);
       _authManager.SetPassword(username, password);
 
-      user = new User(username, type, isBlocked);
+      if (type > 2)
+        user = new AdminUser(username, type, isBlocked);
+      else if (type > 1)
+        user = new ModeratorUser(username, type, isBlocked);
+      else
+        user = new User(username, type, isBlocked);
+
       _users.Add(user);
     }
   }
@@ -93,8 +99,8 @@ class UsersManager
   private void SaveUser(User user, string password)
   {
     string delimiter = _fileHandler.GetDelimiter();
-    string testForFile = $"{user.GetUsername()}{delimiter}{password}{delimiter}{user.GetUserType()}";
-    _fileHandler.AppendToFile(_fileName, testForFile);
+    string textForFile = $"{user.GetUsername()}{delimiter}{password}{delimiter}{user.GetUserType()}{delimiter}{user.IsBlocked()}";
+    _fileHandler.AppendToFile(_fileName, textForFile);
   }
 
   public bool IsUserExists(string username)
@@ -131,5 +137,49 @@ class UsersManager
   public User GetUserByUsername(string username)
   {
     return _users.FirstOrDefault(u => u.GetUsername() == username);
+  }
+
+  public void BlockUser(string targetUsername)
+  {
+    User user = GetUserByUsername(targetUsername);
+    user.Block();
+    UpdateUser(user);
+  }
+
+  public void UnblockUser(string targetUsername)
+  {
+    User user = GetUserByUsername(targetUsername);
+    user.Unblock();
+    UpdateUser(user);
+  }
+
+  public void ChangeUserType(string targetUsername, int type)
+  {
+    User user = GetUserByUsername(targetUsername);
+    user.ChangeType(type);
+    UpdateUser(user);
+  }
+
+  private void UpdateUser(User user)
+  {
+    string targetUsername = user.GetUsername();
+    string[] users = File.ReadAllLines(_fileName);
+    string delimiter = _fileHandler.GetDelimiter();
+
+    using (StreamWriter writer = new StreamWriter(_fileName))
+    {
+      foreach (string line in users)
+      {
+        string[] parts = line.Split(delimiter);
+        string username = parts[0];
+        string textForFile = line;
+
+        if (username == targetUsername)
+        {
+          textForFile = $"{targetUsername}{delimiter}{parts[1]}{delimiter}{user.GetUserType()}{delimiter}{user.IsBlocked()}";
+        }
+        writer.WriteLine(textForFile);
+      }
+    }
   }
 }

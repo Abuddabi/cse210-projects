@@ -103,4 +103,11 @@ class ConsoleHelper
       Console.Write("\b \b");
     }
   }
+
+  public void KeyToContinue()
+  {
+    Console.Write("Please, press any key to continue: ");
+    Console.ReadKey();
+    Console.Clear();
+  }
 }
