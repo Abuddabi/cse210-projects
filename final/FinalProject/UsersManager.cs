@@ -64,6 +64,12 @@ class UsersManager
       _console.RedMsg($"User {username} doesn't exist. Try to signup.");
       return false;
     }
+    User user = GetUserByUsername(username);
+    if (user.IsBlocked())
+    {
+      _console.RedMsg($"User {username} is blocked by Admin. Try another one.");
+      return false;
+    }
 
     bool passwordValid;
     do
@@ -74,7 +80,7 @@ class UsersManager
         _console.RedMsg("Password is invalid. Try one more time.");
     } while (!passwordValid);
 
-    _currentUser = GetUserByUsername(username);
+    _currentUser = user;
 
     return true;
   }
@@ -127,7 +133,14 @@ class UsersManager
 
     foreach (User user in users)
     {
-      Console.WriteLine(user.GetUsername());
+      string username = user.GetUsername();
+      if (user.IsBlocked())
+      {
+        _console.RedMsg(username, false);
+        Console.WriteLine(" (blocked)");
+      }
+      else
+        Console.WriteLine(username);
     }
   }
 

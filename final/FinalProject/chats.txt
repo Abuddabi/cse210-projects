@@ -1,23 +1,3 @@
-
-Main~|~2024-02-20T18:44:04.0510615-06:00~|~test2~|~hello there!
-Main~|~2024-02-20T18:44:10.1662621-06:00~|~Robot~|~hi
-Main~|~2024-02-20T18:46:19.9400261-06:00~|~test2~|~how are you doing?
-Main~|~2024-02-20T18:49:55.8133005-06:00~|~test2~|~what's up?
-Main~|~2024-02-20T18:50:01.9050371-06:00~|~Robot~|~The Sky
-Main~|~2024-02-20T18:51:51.3071243-06:00~|~test2~|~when is the sunset in New-York?
-Main~|~2024-02-20T18:51:57.5815223-06:00~|~Robot~|~Yes or NO
-Main~|~2024-02-20T19:01:24.0845579-06:00~|~test2~|~tell me the truth
-Main~|~2024-02-20T19:02:29.3076828-06:00~|~test2~|~tell me the truth!
-Main~|~2024-02-20T19:02:30.4209623-06:00~|~Robot~|~truth is
-Main~|~2024-02-20T19:02:37.8157670-06:00~|~test2~|~is what?
-Main~|~2024-02-20T19:02:43.5195215-06:00~|~Robot~|~Hmm?
-Main~|~2024-02-20T19:02:53.9878802-06:00~|~test2~|~how are you doing, buddy?
-Main~|~2024-02-20T19:02:59.7995323-06:00~|~Robot~|~i'm good and you?
-Main~|~2024-02-20T19:42:00.0691620-06:00~|~test2~|~are working?
-Main~|~2024-02-20T19:42:06.7519478-06:00~|~Robot~|~????
-Main~|~2024-02-20T19:42:14.5145479-06:00~|~test2~|~do you know what time is it?
-Main~|~2024-02-20T19:42:20.4328407-06:00~|~Robot~|~It's time to go to sleep
-Main~|~2024-02-20T19:42:27.9437497-06:00~|~test2~|~tell me a joke
-Main~|~2024-02-20T19:42:33.6194987-06:00~|~Robot~|~You are a cool guy
-Main~|~2024-02-20T19:45:02.8148882-06:00~|~test2~|~who is here?
-Main~|~2024-02-20T19:45:09.6617869-06:00~|~Robot~|~Ben...Run!
+Main~|~2024-02-20T20:02:04.5671420-06:00~|~test2~|~hello there!
+Main~|~2024-02-20T21:14:11.3180007-06:00~|~test~|~tell me a joke
+Main~|~2024-02-20T21:14:17.9981969-06:00~|~Robot~|~You're a wonderful developer.

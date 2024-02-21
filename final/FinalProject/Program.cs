@@ -292,5 +292,10 @@ class Program
       _console.RedMsg($"Config file {configFilename} is not found.");
       return null;
     }
+    catch (Exception ex)
+    {
+      _console.RedMsg($"Config file error: {ex.Message}");
+      return null;
+    }
   }
 }

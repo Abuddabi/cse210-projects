@@ -10,11 +10,6 @@ class AdminUser : ModeratorUser
 
   }
 
-  public override bool IsBlocked()
-  {
-    return false; // can't block Admin
-  }
-
   public override string GetTypeGreeting()
   {
     return " You're Admin.";
