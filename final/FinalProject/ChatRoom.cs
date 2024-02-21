@@ -37,19 +37,20 @@ class ChatRoom
     return _name;
   }
 
-  public void StartChat(User user)
+  public async Task StartChat(User currentUser, string apiKey = "")
   {
-    _currentUser = user;
+    _currentUser = currentUser;
+    Robot robot = new Robot();
 
     Console.Clear();
     foreach (Message msg in _messages)
     {
       Console.WriteLine(msg.GetChatLine());
     }
+    int footerStart = Console.WindowHeight - 3;
+    if (_messages.Count < footerStart)
+      Console.SetCursorPosition(0, footerStart);
 
-    // Move the cursor to the bottom of the console window
-    Console.SetCursorPosition(0, Console.WindowHeight - 3);
-    // Write new content at the bottom of the console
     _console.GreenMsg($"Now you are in {_name} chat room.");
     Console.WriteLine("To exit the room type \"exit\"");
     _console.GreenMsg($"{_currentUser.GetUsername()}: ", false);
@@ -58,19 +59,38 @@ class ChatRoom
     while (userMsg != "exit")
     {
       SendMessage(_currentUser, userMsg);
+
+      if (apiKey != "")
+      {
+        UpdateChatDisplay(true);
+        string robotAnswer = await robot.GetAnswer(userMsg, apiKey);
+        if (robotAnswer != "")
+          SendMessage(robot, robotAnswer);
+      }
       UpdateChatDisplay();
       userMsg = Console.ReadLine();
     };
   }
 
-  private void UpdateChatDisplay()
+  private void UpdateChatDisplay(bool waitForRobot = false)
   {
     Console.Clear();
     foreach (Message msg in _messages)
     {
       Console.WriteLine(msg.GetChatLine());
     }
-    Console.SetCursorPosition(0, Console.WindowHeight - 2);
+    int messagesHeight = _messages.Count;
+
+    if (waitForRobot)
+    {
+      _console.RedMsg("Waiting for Robot answer...");
+      messagesHeight++;
+    }
+
+    int footerStart = Console.WindowHeight - 2;
+    if (messagesHeight < footerStart)
+      Console.SetCursorPosition(0, footerStart);
+
     Console.WriteLine("To exit the room type \"exit\"");
     _console.GreenMsg($"{_currentUser.GetUsername()}: ", false);
   }

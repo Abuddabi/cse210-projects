@@ -47,6 +47,8 @@ class UsersManager
 
       _users.Add(user);
     }
+
+    _users.Add(new Robot());
   }
 
   public List<User> GetUsers()

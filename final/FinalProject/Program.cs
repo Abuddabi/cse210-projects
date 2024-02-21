@@ -1,5 +1,6 @@
 using System;
-using System.Security.Authentication;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 
 class Program
 {
@@ -8,12 +9,12 @@ class Program
   private static RoomsManager _roomsManager = new RoomsManager();
   private static User _currentUser;
 
-  static void Main(string[] args)
+  static async Task Main(string[] args)
   {
     Console.Clear();
     Console.WriteLine("\nWelcome to the Console Chat Application!");
     Start();
-    RunMenu();
+    await RunMenu();
     Console.WriteLine("\nChat ended. Goodbye!");
   }
 
@@ -55,7 +56,7 @@ class Program
     return authFinished;
   }
 
-  private static void RunMenu()
+  private static async Task RunMenu()
   {
     List<string> menu;
     int exitInt = 0;
@@ -69,10 +70,7 @@ class Program
         if (menu[i] == "=")
           Console.WriteLine("  ====================");
         else
-        {
-          j++;
-          Console.WriteLine($"  {j}. {menu[i]}");
-        }
+          Console.WriteLine($"  {++j}. {menu[i]}");
         exitInt = j;
       }
 
@@ -81,7 +79,7 @@ class Program
       if (exit)
         return;
 
-      RunMethod(userChoice);
+      await RunMethod(userChoice);
     }
   }
 
@@ -118,7 +116,7 @@ class Program
     return menu;
   }
 
-  private static void RunMethod(int userChoice)
+  private static async Task RunMethod(int userChoice)
   {
     // we can change it in future
     switch (userChoice)
@@ -130,7 +128,7 @@ class Program
         ShowRooms();
         break;
       case 3:
-        ChooseRoom();
+        await ChooseRoom();
         break;
       case 4:
         CreateRoom();
@@ -162,7 +160,7 @@ class Program
     _roomsManager.PrintAllRooms();
   }
 
-  private static void ChooseRoom()
+  private static async Task ChooseRoom()
   {
     string roomName = _console.GetStringFromUser("Please write the name of the chat room you want to start speaking in: ", false);
     ChatRoom room = _roomsManager.FindRoomByName(roomName);
@@ -171,7 +169,20 @@ class Program
       _console.RedMsg($"{roomName} room doesn't exist. Try another one.");
       return;
     }
-    room.StartChat(_currentUser);
+
+    string apiKey = "";
+    string userAnswer = _console.GetStringFromUser("Do you want to use API robot to answer in the chat? (yes/no): ");
+    if (userAnswer == "yes")
+    {
+      apiKey = GetConfigValue("API_KEYS:ROBOT_CHAT");
+      if (apiKey == null)
+      {
+        apiKey = _console.GetStringFromUser("Please, enter API KEY (or type \"cancel\"): ");
+        if (apiKey == "cancel")
+          apiKey = "";
+      }
+    }
+    await room.StartChat(_currentUser, apiKey);
   }
 
   private static void CreateRoom()
@@ -198,6 +209,13 @@ class Program
       _console.RedMsg($"Room {roomName} doesn't exist.");
       return;
     }
+
+    _console.RedMsg("With the room you will delete all messages in that room.");
+    Console.Write("Are you sure? (yes/no): ");
+    string confident = Console.ReadLine();
+    if (confident == "no")
+      return;
+
     _currentUser.DeleteRoom(roomName);
     _console.GreenMsg($"\nRoom {roomName} is deleted.");
     _console.KeyToContinue();
@@ -254,5 +272,25 @@ class Program
     string typeStr = type == 3 ? "an Admin" : type == 2 ? "a Moderator" : "a regular user";
     _console.GreenMsg($"The type is successfully changed. Now {username} is {typeStr}.");
     _console.KeyToContinue();
+  }
+
+  private static string GetConfigValue(string valueName)
+  {
+    string configFilename = "appsettings.json";
+
+    try
+    {
+      IConfiguration config = new ConfigurationBuilder()
+      .SetBasePath(Directory.GetCurrentDirectory())
+      .AddJsonFile(configFilename)
+      .Build();
+
+      return config[valueName];
+    }
+    catch (FileNotFoundException)
+    {
+      _console.RedMsg($"Config file {configFilename} is not found.");
+      return null;
+    }
   }
 }

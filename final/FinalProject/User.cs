@@ -89,4 +89,9 @@ class User
   {
     return; // Forbidden for regular users.
   }
+
+  public virtual Task<string> GetAnswer(string messageToReplyTo, string apiKey)
+  {
+    return Task.FromResult(""); // Using for Robot
+  }
 }

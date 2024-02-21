@@ -49,6 +49,21 @@ class RoomsManager
         writer.WriteLine(roomName);
       }
     }
+
+    fileName = "chats.txt";
+    string delimiter = _fileHandler.GetDelimiter();
+    string[] chatMsgs = File.ReadAllLines(fileName);
+    string[] parts;
+    using (StreamWriter writer = new StreamWriter(fileName))
+    {
+      foreach (string chatLine in chatMsgs)
+      {
+        parts = chatLine.Split(delimiter);
+        if (parts[0] == deleteRoom)
+          continue;
+        writer.WriteLine(chatLine);
+      }
+    }
   }
 
   public void LoadRooms()
